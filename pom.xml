@@ -11,10 +11,23 @@
     </parent>
 
     <groupId>org.triple_brain.module</groupId>
-    <artifactId>search</artifactId>
-    <version>1.0</version>
+    <artifactId>triple_brain-search</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
 
     <dependencies>
+
+        <dependency>
+            <groupId>org.triple_brain.module</groupId>
+            <artifactId>triple_brain-model</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.triple_brain.module</groupId>
+            <artifactId>triple_brain-common-utils</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
 
         <dependency>
             <groupId>org.apache.solr</groupId>
@@ -26,6 +39,12 @@
             <groupId>org.apache.solr</groupId>
             <artifactId>solr-solrj</artifactId>
             <version>3.6.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.5.8</version>
         </dependency>
 
         <!--Tests-->
@@ -47,7 +66,27 @@
             <version>1.1</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.triple_brain.module</groupId>
+            <artifactId>triple_brain-jena-graph-manipulator</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <classifier>tests</classifier>
+            <scope>test</scope>
+        </dependency>
 
+        <dependency>
+            <groupId>org.triple_brain.module</groupId>
+            <artifactId>triple_brain-jena-graph-manipulator</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.triple_brain.module</groupId>
+            <artifactId>triple_brain-repository-sql</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <classifier>tests</classifier>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     
 </project>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<schema name="example" version="1.5">
+    <uniqueKey>uri</uniqueKey>
+    <types>
+        <fieldType name="string" class="solr.StrField" sortMissingLast="true"/>
+        <fieldType name="boolean" class="solr.BoolField" sortMissingLast="true"/>
+    </types>
+    <fields>
+        <field name="uri" type="string" indexed="true" stored="true" required="true" />
+        <field name="is_vertex" type="boolean" indexed="true" stored="true"/>
+        <field name="label" type="string" indexed="true" stored="true"/>
+    </fields>
+</schema>
