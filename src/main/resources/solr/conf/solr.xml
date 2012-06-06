@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<solr persistent="true">
-    <cores adminPath="/admin/cores">
-        <core name="triple_brain" instanceDir="/var/lib/triple_brain/solr/" />
-        <core name="triple_brain_tests" instanceDir="src/test/resources/solr/triple_brain" />
-        <property name="schema" value="schema.xml" />
-    </cores>
-</solr>
