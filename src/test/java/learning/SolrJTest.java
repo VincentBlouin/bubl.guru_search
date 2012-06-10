@@ -4,10 +4,14 @@ import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
+import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrInputDocument;
 import org.apache.solr.common.params.CommonParams;
+import org.apache.solr.common.params.CoreAdminParams;
 import org.apache.solr.core.CoreContainer;
+import org.apache.solr.core.CoreDescriptor;
+import org.apache.solr.core.SolrCore;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -15,6 +19,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
@@ -24,7 +29,10 @@ import static org.junit.Assert.*;
 */
 public class SolrJTest {
     String solrHomeRelativePath = "src/test/resources/learning/solr/";
-    String solrXMLRelativePath = "conf/solr.xml";
+    String solrXMLHomeRelativePath = "conf/solr.xml";
+    String solrConfigHomeRelativePath = "conf/solrconfig.xml";
+    String solrSchemaHomeRelativePath = "conf/schema.xml";
+    String defaultCollectionName = "collection1";
     CoreContainer coreContainer;
     SolrServer solrServer;
 
@@ -36,10 +44,10 @@ public class SolrJTest {
     }
 
     private SolrServer startUpSolrServer()throws Exception{
-        File solrConfigXml = new File(solrHomeRelativePath + solrXMLRelativePath);
+        File solrConfigXml = new File(solrHomeRelativePath + solrXMLHomeRelativePath);
         String solrHome = solrHomeRelativePath;
         coreContainer = new CoreContainer(solrHome, solrConfigXml);
-        SolrServer solrServer = new EmbeddedSolrServer(coreContainer, "collection1");
+        SolrServer solrServer = new EmbeddedSolrServer(coreContainer, defaultCollectionName);
         return solrServer;
     }
 
@@ -98,7 +106,6 @@ public class SolrJTest {
         List<String> suggestions = suggestionsOfQuery(solrQuery);
         assertThat(suggestions.size(), is(2));
     }
-
     @Test
     public void can_persist_documents()throws Exception{
         assertTrue(coreContainer.isPersistent());
@@ -113,6 +120,66 @@ public class SolrJTest {
         }
         solrServer = startUpSolrServer();
         assertFalse(getAllDocsUsingSolr().isEmpty());
+    }
+
+    @Test
+    public void can_create_another_core()throws Exception{
+        QueryResponse queryResponse = createCoreWithName(
+                UUID.randomUUID().toString()
+        );
+        assertThat(
+                (Integer) queryResponse.getResponseHeader().get("status"),
+                is(0)
+        );
+    }
+
+    @Test
+    public void can_query_a_new_core()throws Exception{
+        String coreName = UUID.randomUUID().toString();
+        SolrCore solrCore = coreContainer.create(new CoreDescriptor(
+                coreContainer,
+                coreName,
+                "."
+        ));
+        coreContainer.register(solrCore, true);
+        solrServer = new EmbeddedSolrServer(coreContainer, coreName);
+        solrServer.add(doc1Example());
+        solrServer.commit();
+        SolrDocumentList documents = getAllDocsUsingSolr();
+        assertThat(documents.size(), is(1));
+        solrServer = new EmbeddedSolrServer(coreContainer, defaultCollectionName);
+        documents = getAllDocsUsingSolr();
+        assertThat(documents.size(), is(0));
+    }
+
+    private QueryResponse createCoreWithName(String name)throws Exception{
+        SolrQuery solrQuery = new SolrQuery();
+        solrQuery.setParam(CommonParams.QT, "/admin/cores");
+        solrQuery.setParam(
+                CoreAdminParams.ACTION,
+                CoreAdminParams.CoreAdminAction.CREATE.name()
+        );
+        solrQuery.setParam(
+                CoreAdminParams.NAME,
+                name
+        );
+        solrQuery.setParam(
+                CoreAdminParams.INSTANCE_DIR,
+                "./" + name
+        );
+        solrQuery.setParam(
+                CoreAdminParams.CONFIG,
+                solrHomeRelativePath + solrConfigHomeRelativePath
+        );
+        solrQuery.setParam(
+                CoreAdminParams.SCHEMA,
+                solrHomeRelativePath + solrSchemaHomeRelativePath
+        );
+        solrQuery.setParam(
+                CoreAdminParams.DATA_DIR,
+                "."
+        );
+        return solrServer.query(solrQuery);
     }
 
     private SolrDocumentList getAllDocsUsingSolr()throws Exception{
