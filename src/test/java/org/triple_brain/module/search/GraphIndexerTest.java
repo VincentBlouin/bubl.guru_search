@@ -13,13 +13,13 @@ import static org.triple_brain.module.common_utils.CommonUtils.encodeURL;
 /*
 * Copyright Mozilla Public License 1.1
 */
-public class GraphIndexerTest extends SearchTest{
+public class GraphIndexerTest extends SearchRelatedTest {
 
     @Test
     public void can_index_vertex()throws Exception{
         SolrDocumentList documentList = queryVertex(vertexA);
         assertThat(documentList.size(), is(0));
-        graphIndexer().indexVertex(vertexA);
+        graphIndexer().indexVertexOfUser(vertexA, user);
         documentList = queryVertex(vertexA);
         assertThat(documentList.size(), is(1));
         assertThat(
@@ -38,9 +38,5 @@ public class GraphIndexerTest extends SearchTest{
                         "uri:" + encodeURL(vertex.id())
                 )
         );
-    }
-
-    GraphIndexer graphIndexer(){
-        return GraphIndexer.withSolrInstance(solrInstance);
     }
 }

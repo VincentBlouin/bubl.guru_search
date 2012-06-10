@@ -27,7 +27,6 @@ public class GraphSearch {
     private CoreContainer coreContainer;
     private SearchUtils searchUtils;
 
-
     public static GraphSearch withCoreContainer(CoreContainer coreContainer){
         return new GraphSearch(coreContainer);
     }

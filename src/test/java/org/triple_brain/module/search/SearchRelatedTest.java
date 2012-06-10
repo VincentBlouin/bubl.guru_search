@@ -9,6 +9,7 @@ import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocumentList;
+import org.apache.solr.core.CoreContainer;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -17,69 +18,100 @@ import org.triple_brain.graphmanipulator.jena.graph.JenaVertexManipulator;
 import org.triple_brain.module.model.User;
 import org.triple_brain.module.model.graph.Vertex;
 
+import java.io.File;
+
 /*
 * Copyright Mozilla Public License 1.1
 */
-public class SearchTest {
+public class SearchRelatedTest {
 
     protected JenaGraphManipulatorMock graphManipulator;
     protected JenaVertexManipulator vertexManipulator;
     protected JenaEdgeManipulator edgeManipulator;
-
+    protected SearchUtils searchUtils;
     protected Vertex vertexA;
     protected Vertex vertexB;
     protected Vertex vertexC;
-
+    protected Vertex pineApple;
     protected User user;
-
-    protected static SolrInstance solrInstance;
+    private GraphScenariosGenerator graphScenariosGenerator;
+    protected static CoreContainer coreContainer;
 
     @BeforeClass
-    public static void beforeClass(){
+    public static void beforeClass()throws Exception{
         Guice.createInjector(new JenaSQLTestModule());
-        solrInstance = SolrInstance.withSolrHomeAndRelativeSolrXmlPath(
-                "src/test/resources/solr/",
-                "conf/solr.xml"
-                );
+        coreContainer = getCoreContainerForTests();
+    }
+
+    private static CoreContainer getCoreContainerForTests()throws Exception{
+        String solrHomePath = "src/test/resources/solr/";
+        String solrXMLPath = "conf/solr.xml";
+        File solrConfigXml = new File(solrHomePath + solrXMLPath);
+        return new CoreContainer(solrHomePath, solrConfigXml);
     }
 
     @AfterClass
     public static void afterClass(){
-        solrInstance.coreContainer().shutdown();
+        coreContainer.shutdown();
     }
 
     @Before
     public void before() throws Exception{
+        searchUtils = SearchUtils.usingCoreCoreContainer(coreContainer);
         user = User.withUsernameAndEmail("test", "test@example.org");
-        solrServer().deleteByQuery("*:*");
-        solrServer().commit();
+        graphIndexer().createUserCore(user);
+        deleteAllDocsOfUser(user);
         graphManipulator = JenaGraphManipulatorMock.mockWithUser(user);
         vertexManipulator = JenaVertexManipulator.withUser(user);
         edgeManipulator = JenaEdgeManipulator.withUser(user);
-        makeGraphHave3VerticesABCWhereAIsDefaultCenterVertexAndAPointsToBAndBPointsToC();
-    }
-
-    protected void makeGraphHave3VerticesABCWhereAIsDefaultCenterVertexAndAPointsToBAndBPointsToC() throws Exception {
-        GraphScenariosGenerator graphScenariosGenerator = GraphScenariosGenerator.withUserManipulators(
+        graphScenariosGenerator = GraphScenariosGenerator.withUserManipulators(
                 user,
                 graphManipulator,
                 vertexManipulator,
                 edgeManipulator
         );
+        makeGraphHave3VerticesABCWhereAIsDefaultCenterVertexAndAPointsToBAndBPointsToC();
+        pineApple = graphScenariosGenerator.addPineAppleVertexToVertex(vertexC);
+    }
+
+    protected void makeGraphHave3VerticesABCWhereAIsDefaultCenterVertexAndAPointsToBAndBPointsToC() throws Exception {
         VertexABAndC vertexABAndC = graphScenariosGenerator.makeGraphHave3VerticesABCWhereAIsDefaultCenterVertexAndAPointsToBAndBPointsToC();
         vertexA = vertexABAndC.vertexA();
         vertexB = vertexABAndC.vertexB();
         vertexC = vertexABAndC.vertexC();
     }
 
-    protected SolrServer solrServer(){
-        return solrInstance.solrServer();
+    protected void deleteAllDocsOfUser(User user)throws Exception{
+        SolrServer solrServer = solrServerFromUser(user);
+        solrServer.deleteByQuery("*:*");
+        solrServer.commit();
     }
 
     protected SolrDocumentList resultsOfSearchQuery(SolrQuery solrQuery)throws Exception{
-        QueryResponse queryResponse = solrServer().query(solrQuery);
+        SolrServer solrServer = solrServerFromUser(user);
+        QueryResponse queryResponse = solrServer.query(solrQuery);
         return queryResponse.getResults() == null ?
                 new SolrDocumentList() :
-                solrServer().query(solrQuery).getResults();
+                solrServer.query(solrQuery).getResults();
+    }
+
+    protected SolrServer solrServerFromUser(User user){
+        return searchUtils.solrServerFromUser(user);
+    }
+
+    protected GraphIndexer graphIndexer(){
+        return GraphIndexer.withCoreContainer(coreContainer);
+    }
+
+    protected void indexVertexABAndC(){
+        GraphIndexer graphIndexer = GraphIndexer.withCoreContainer(coreContainer);
+        graphIndexer.indexVertexOfUser(vertexA, user);
+        graphIndexer.indexVertexOfUser(vertexB, user);
+        graphIndexer.indexVertexOfUser(vertexC, user);
+    }
+
+    protected void indexVertex(Vertex vertex){
+        GraphIndexer graphIndexer = GraphIndexer.withCoreContainer(coreContainer);
+        graphIndexer.indexVertexOfUser(pineApple, user);
     }
 }
