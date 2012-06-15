@@ -5,7 +5,6 @@ import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
-import org.apache.solr.common.params.CommonParams;
 import org.apache.solr.core.CoreContainer;
 import org.triple_brain.graphmanipulator.jena.graph.JenaGraphManipulator;
 import org.triple_brain.module.model.User;
@@ -13,9 +12,8 @@ import org.triple_brain.module.model.graph.Vertex;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.StringTokenizer;
 
 import static org.triple_brain.module.common_utils.CommonUtils.decodeURL;
 
@@ -36,17 +34,22 @@ public class GraphSearch {
         this.searchUtils = SearchUtils.usingCoreCoreContainer(coreContainer);
     }
 
-    List<Vertex> searchVerticesForAutoCompletionByLabelAndUser(String label, User user){
+    public List<Vertex> searchVerticesForAutoCompletionByLabelAndUser(String label, User user){
         List<Vertex> vertices = new ArrayList<>();
+        JenaGraphManipulator jenaGraphManipulator = JenaGraphManipulator.withUser(user);
         try{
-            GraphSearchInUser graphSearchInUser = new GraphSearchInUser(
-                    searchUtils.solrServerFromUser(user),
-                    JenaGraphManipulator.withUser(user)
-            );
-            List<String> suggestions = graphSearchInUser.suggestionsForLabel(label);
-            for(String suggestion : suggestions){
-                vertices.addAll(
-                        graphSearchInUser.verticesWithLabel(suggestion)
+            SolrServer solrServer = searchUtils.solrServerFromUser(user);
+            SolrQuery solrQuery = new SolrQuery();
+            String sentenceMinusLastWord = sentenceMinusLastWord(label);
+            String lastWord = lastWordOfSentence(label);
+            solrQuery.setQuery("label:"+sentenceMinusLastWord +"*");
+            solrQuery.addFilterQuery("label:"+sentenceMinusLastWord+"*"+lastWord+"*");
+            QueryResponse queryResponse = solrServer.query(solrQuery);
+            for(SolrDocument document : queryResponse.getResults()){
+                vertices.add(
+                        jenaGraphManipulator.vertexWithURI(
+                                decodeURL((String) document.get("uri"))
+                        )
                 );
             }
         }catch (SolrServerException | UnsupportedEncodingException e){
@@ -55,35 +58,23 @@ public class GraphSearch {
         return vertices;
     }
 
-    private class GraphSearchInUser{
-        private SolrServer solrServer;
-        private JenaGraphManipulator graphManipulator;
-        public GraphSearchInUser (SolrServer solrServer, JenaGraphManipulator graphManipulator){
-            this.solrServer = solrServer;
-            this.graphManipulator = graphManipulator;
+    private String lastWordOfSentence(String sentence){
+        StringTokenizer tokenizer = new StringTokenizer(
+                sentence,
+                " "
+        );
+        String lastWord = "";
+        while(tokenizer.hasMoreTokens()){
+            lastWord = tokenizer.nextToken();
         }
-
-        public List<String> suggestionsForLabel(String label)throws SolrServerException{
-            SolrQuery solrQuery = new SolrQuery();
-            solrQuery.setParam(CommonParams.QT, "/suggest");
-            solrQuery.setParam(CommonParams.Q, label);
-            return solrServer.query(solrQuery).getSpellCheckResponse().getSuggestions().get(0).getAlternatives();
-        }
-
-        public Set<Vertex> verticesWithLabel(String label)throws SolrServerException, UnsupportedEncodingException{
-            Set<Vertex> vertices = new HashSet<>();
-            SolrQuery solrQuery = new SolrQuery();
-            solrQuery.setQuery("label:\""+label+"\"");
-            QueryResponse queryResponse = solrServer.query(solrQuery);
-            for(SolrDocument document : queryResponse.getResults()){
-                vertices.add(
-                        graphManipulator.vertexWithURI(
-                                decodeURL((String) document.get("uri"))
-                        )
-                );
-            }
-            return vertices;
-        }
+        return lastWord;
     }
 
+    private String sentenceMinusLastWord(String sentence){
+        if(sentence.contains(" ")){
+            return sentence.substring(0, sentence.lastIndexOf(" "));
+        }else{
+            return "";
+        }
+    }
 }

@@ -60,6 +60,16 @@ public class GraphIndexer {
         }
     }
 
+    public void deleteVertexOfUser(Vertex vertex, User user){
+        try{
+            SolrServer solrServer = searchUtils.solrServerFromUser(user);
+            solrServer.deleteByQuery("uri:"+encodeURL(vertex.id()));
+            solrServer.commit();
+        }catch(IOException | SolrServerException e){
+            throw new RuntimeException(e);
+        }
+    }
+
     private SolrInputDocument graphElementToDocument(GraphElement graphElement)throws UnsupportedEncodingException{
         SolrInputDocument document = new SolrInputDocument();
         document.addField("uri", encodeURL(graphElement.id()));

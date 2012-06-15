@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <schema name="example" version="1.5">
     <uniqueKey>uri</uniqueKey>
+    <defaultSearchField>label</defaultSearchField>
     <types>
         <fieldType name="string" class="solr.StrField" sortMissingLast="true"/>
         <fieldType name="boolean" class="solr.BoolField" sortMissingLast="true"/>

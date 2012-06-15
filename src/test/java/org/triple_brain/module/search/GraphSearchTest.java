@@ -11,19 +11,20 @@ import static org.junit.Assert.assertThat;
 /*
 * Copyright Mozilla Public License 1.1
 */
-public class GraphSearchTest extends SearchRelatedTest{
+public class GraphSearchTest extends SearchRelatedTest {
 
     @Test
-    public void can_search_vertices_for_auto_completion(){
+    public void can_search_vertices_for_auto_completion() {
         indexVertexABAndC();
         indexVertex(pineApple);
         GraphSearch graphSearch = GraphSearch.withCoreContainer(coreContainer);
-        List<Vertex> vertices = graphSearch.searchVerticesForAutoCompletionByLabelAndUser("vert", user);
+        List<Vertex> vertices;
+        vertices = graphSearch.searchVerticesForAutoCompletionByLabelAndUser("vert", user);
         assertThat(vertices.size(), is(3));
-        vertices = graphSearch.searchVerticesForAutoCompletionByLabelAndUser("vertex B", user);
-        assertThat(vertices.size(), is(3));
+        vertices = graphSearch.searchVerticesForAutoCompletionByLabelAndUser("vertex Cad", user);
+        assertThat(vertices.size(), is(1));
         Vertex firstVertex = vertices.get(0);
-        assertThat(firstVertex.label(), is("vertex B"));
+        assertThat(firstVertex.label(), is("vertex Cadeau"));
         vertices = graphSearch.searchVerticesForAutoCompletionByLabelAndUser("pine A", user);
         assertThat(vertices.size(), is(1));
     }

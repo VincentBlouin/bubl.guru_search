@@ -4,7 +4,7 @@ import com.google.inject.Guice;
 import graph.JenaSQLTestModule;
 import graph.mock.JenaGraphManipulatorMock;
 import graph.scenarios.GraphScenariosGenerator;
-import graph.scenarios.VertexABAndC;
+import graph.scenarios.VerticesCalledABAndC;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.response.QueryResponse;
@@ -70,12 +70,12 @@ public class SearchRelatedTest {
                 vertexManipulator,
                 edgeManipulator
         );
-        makeGraphHave3VerticesABCWhereAIsDefaultCenterVertexAndAPointsToBAndBPointsToC();
+        makeGraphHave3SerialVerticesWithLongLabels();
         pineApple = graphScenariosGenerator.addPineAppleVertexToVertex(vertexC);
     }
 
-    protected void makeGraphHave3VerticesABCWhereAIsDefaultCenterVertexAndAPointsToBAndBPointsToC() throws Exception {
-        VertexABAndC vertexABAndC = graphScenariosGenerator.makeGraphHave3VerticesABCWhereAIsDefaultCenterVertexAndAPointsToBAndBPointsToC();
+    protected void makeGraphHave3SerialVerticesWithLongLabels() throws Exception {
+        VerticesCalledABAndC vertexABAndC = graphScenariosGenerator.makeGraphHave3SerialVerticesWithLongLabels();
         vertexA = vertexABAndC.vertexA();
         vertexB = vertexABAndC.vertexB();
         vertexC = vertexABAndC.vertexC();

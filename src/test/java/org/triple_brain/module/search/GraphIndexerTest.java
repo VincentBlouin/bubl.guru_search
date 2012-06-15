@@ -24,7 +24,7 @@ public class GraphIndexerTest extends SearchRelatedTest {
         assertThat(documentList.size(), is(1));
         assertThat(
                 labelOfGraphElementSearchResult(documentList.get(0)),
-                is("vertex A")
+                is("vertex Azure")
         );
     }
 
