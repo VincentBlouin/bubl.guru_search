@@ -6,23 +6,23 @@ import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.core.CoreContainer;
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 import org.triple_brain.graphmanipulator.jena.graph.JenaGraphManipulator;
 import org.triple_brain.module.model.User;
-import org.triple_brain.module.model.graph.Vertex;
 
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.StringTokenizer;
 
 import static org.triple_brain.module.common_utils.CommonUtils.decodeURL;
+import static org.triple_brain.module.model.json.graph.VertexJSONFields.*;
 
 /*
 * Copyright Mozilla Public License 1.1
 */
 public class GraphSearch {
 
-    private CoreContainer coreContainer;
     private SearchUtils searchUtils;
 
     public static GraphSearch withCoreContainer(CoreContainer coreContainer){
@@ -30,12 +30,11 @@ public class GraphSearch {
     }
 
     private GraphSearch(CoreContainer coreContainer){
-        this.coreContainer = coreContainer;
         this.searchUtils = SearchUtils.usingCoreCoreContainer(coreContainer);
     }
 
-    public List<Vertex> searchVerticesForAutoCompletionByLabelAndUser(String label, User user){
-        List<Vertex> vertices = new ArrayList<>();
+    public JSONArray searchVerticesForAutoCompletionByLabelAndUser(String label, User user){
+        JSONArray vertices = new JSONArray();
         JenaGraphManipulator jenaGraphManipulator = JenaGraphManipulator.withUser(user);
         try{
             SolrServer solrServer = searchUtils.solrServerFromUser(user);
@@ -46,13 +45,13 @@ public class GraphSearch {
             solrQuery.addFilterQuery("label:"+sentenceMinusLastWord+"*"+lastWord+"*");
             QueryResponse queryResponse = solrServer.query(solrQuery);
             for(SolrDocument document : queryResponse.getResults()){
-                vertices.add(
-                        jenaGraphManipulator.vertexWithURI(
-                                decodeURL((String) document.get("uri"))
-                        )
-                );
+                JSONObject searchResult = new JSONObject()
+                        .put(ID, decodeURL((String) document.get("uri")))
+                        .put(LABEL, document.get("label"));
+                vertices.put(searchResult);
+
             }
-        }catch (SolrServerException | UnsupportedEncodingException e){
+        }catch (SolrServerException | UnsupportedEncodingException | JSONException e){
             throw new RuntimeException(e);
         }
         return vertices;
