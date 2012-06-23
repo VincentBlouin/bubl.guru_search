@@ -3,7 +3,7 @@ package org.triple_brain.module.search;
 import com.google.inject.Guice;
 import graph.JenaSQLTestModule;
 import graph.mock.JenaGraphManipulatorMock;
-import graph.scenarios.GraphScenariosGenerator;
+import graph.scenarios.TestScenarios;
 import graph.scenarios.VerticesCalledABAndC;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServer;
@@ -34,7 +34,7 @@ public class SearchRelatedTest {
     protected Vertex vertexC;
     protected Vertex pineApple;
     protected User user;
-    private GraphScenariosGenerator graphScenariosGenerator;
+    protected TestScenarios testScenarios;
     protected static CoreContainer coreContainer;
 
     @BeforeClass
@@ -43,7 +43,7 @@ public class SearchRelatedTest {
         coreContainer = getCoreContainerForTests();
     }
 
-    private static CoreContainer getCoreContainerForTests()throws Exception{
+    protected static CoreContainer getCoreContainerForTests()throws Exception{
         String solrHomePath = "src/test/resources/solr/";
         String solrXMLPath = "conf/solr.xml";
         File solrConfigXml = new File(solrHomePath + solrXMLPath);
@@ -64,18 +64,18 @@ public class SearchRelatedTest {
         graphManipulator = JenaGraphManipulatorMock.mockWithUser(user);
         vertexManipulator = JenaVertexManipulator.withUser(user);
         edgeManipulator = JenaEdgeManipulator.withUser(user);
-        graphScenariosGenerator = GraphScenariosGenerator.withUserManipulators(
+        testScenarios = TestScenarios.withUserManipulators(
                 user,
                 graphManipulator,
                 vertexManipulator,
                 edgeManipulator
         );
         makeGraphHave3SerialVerticesWithLongLabels();
-        pineApple = graphScenariosGenerator.addPineAppleVertexToVertex(vertexC);
+        pineApple = testScenarios.addPineAppleVertexToVertex(vertexC);
     }
 
     protected void makeGraphHave3SerialVerticesWithLongLabels() throws Exception {
-        VerticesCalledABAndC vertexABAndC = graphScenariosGenerator.makeGraphHave3SerialVerticesWithLongLabels();
+        VerticesCalledABAndC vertexABAndC = testScenarios.makeGraphHave3SerialVerticesWithLongLabels();
         vertexA = vertexABAndC.vertexA();
         vertexB = vertexABAndC.vertexB();
         vertexC = vertexABAndC.vertexC();

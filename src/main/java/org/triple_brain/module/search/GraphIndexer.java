@@ -1,17 +1,17 @@
 package org.triple_brain.module.search;
 
+import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
+import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
 import org.apache.solr.common.SolrInputDocument;
+import org.apache.solr.common.params.CoreAdminParams;
 import org.apache.solr.core.CoreContainer;
-import org.apache.solr.core.CoreDescriptor;
-import org.apache.solr.core.SolrCore;
+import org.apache.solr.util.CommonParams;
 import org.triple_brain.module.model.User;
 import org.triple_brain.module.model.graph.GraphElement;
 import org.triple_brain.module.model.graph.Vertex;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
@@ -20,6 +20,7 @@ import static org.triple_brain.module.common_utils.CommonUtils.encodeURL;
 /*
 * Copyright Mozilla Public License 1.1
 */
+
 public class GraphIndexer {
 
     private CoreContainer coreContainer;
@@ -36,16 +37,51 @@ public class GraphIndexer {
 
     public void createUserCore(User user){
         String coreName = user.username();
+        SolrQuery solrQuery = new SolrQuery();
+        solrQuery.setParam(CommonParams.QT, "/admin/cores");
+        solrQuery.setParam(
+                CoreAdminParams.ACTION,
+                CoreAdminParams.CoreAdminAction.CREATE.name()
+        );
+        solrQuery.setParam(
+                CoreAdminParams.NAME,
+                coreName
+        );
+        solrQuery.setParam(
+                CoreAdminParams.INSTANCE_DIR,
+                "./" + coreName
+        );
+        solrQuery.setParam(
+                CoreAdminParams.CONFIG,
+                configFilePath()
+        );
+        solrQuery.setParam(
+                CoreAdminParams.SCHEMA,
+                schemaFilePath()
+        );
+        solrQuery.setParam(
+                CoreAdminParams.DATA_DIR,
+                "."
+        );
+        SolrServer solrServer = new EmbeddedSolrServer(
+                coreContainer,
+                coreContainer.getDefaultCoreName()
+        );
         try{
-            SolrCore solrCore = coreContainer.create(new CoreDescriptor(
-                    coreContainer,
-                    coreName,
-                    "."
-            ));
-            coreContainer.register(solrCore, true);
-        }catch (ParserConfigurationException | IOException | SAXException e){
+            solrServer.query(solrQuery);
+        }catch(SolrServerException e){
             throw new RuntimeException(e);
         }
+    }
+
+    private String configFilePath(){
+        return coreContainer.getConfigFile().getParent() + "/" +
+                coreContainer.getCore(coreContainer.getDefaultCoreName()).getCoreDescriptor().getConfigName();
+    }
+
+    private String schemaFilePath(){
+        return coreContainer.getConfigFile().getParent() + "/" +
+                coreContainer.getCore(coreContainer.getDefaultCoreName()).getCoreDescriptor().getSchemaName();
     }
 
     public void indexVertexOfUser(Vertex vertex, User user){
