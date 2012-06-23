@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <solr persistent="true">
-    <cores adminPath="/admin/cores" defaultCoreName="triple_brain">
-        <core name="triple_brain" instanceDir="." />
-        <property name="schema" value="schema.xml" />
-    </cores>
+  <cores adminPath="/admin/cores" defaultCoreName="triple_brain">
+    <core name="triple_brain" instanceDir="./"/>
+    <core name="test_user" instanceDir="./test_user/" config="/home/vince/Projects/triple_brain/module/search/src/test/resources/solr/conf/solrconfig.xml" schema="/home/vince/Projects/triple_brain/module/search/src/test/resources/solr/conf/schema.xml" dataDir="."/>
+    <core name="vince" instanceDir="./vince/" config="/home/vince/Projects/triple_brain/module/search/src/test/resources/solr/conf/solrconfig.xml" schema="/home/vince/Projects/triple_brain/module/search/src/test/resources/solr/conf/schema.xml" dataDir="."/>
+    <core name="vaoijd" instanceDir="./vaoijd/" config="/home/vince/Projects/triple_brain/module/search/src/test/resources/solr/conf/solrconfig.xml" schema="/home/vince/Projects/triple_brain/module/search/src/test/resources/solr/conf/schema.xml" dataDir="."/>
+  </cores>
 </solr>
