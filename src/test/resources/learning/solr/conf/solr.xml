@@ -22,5 +22,7 @@
     <core name="2b01957b-80b7-47aa-89b0-41368e43b8ac" instanceDir="./2b01957b-80b7-47aa-89b0-41368e43b8ac/" config="src/test/resources/learning/solr/conf/solrconfig.xml" schema="src/test/resources/learning/solr/conf/schema.xml" dataDir="."/>
     <core name="fa57cce4-ae1d-4422-8511-5eaf76b76ff2" instanceDir="./fa57cce4-ae1d-4422-8511-5eaf76b76ff2/" config="src/test/resources/learning/solr/conf/solrconfig.xml" schema="src/test/resources/learning/solr/conf/schema.xml" dataDir="."/>
     <core name="10bbe184-2a0e-4f6c-b4c7-280c52ce75d3" instanceDir="./10bbe184-2a0e-4f6c-b4c7-280c52ce75d3/" config="src/test/resources/learning/solr/conf/solrconfig.xml" schema="src/test/resources/learning/solr/conf/schema.xml" dataDir="."/>
+    <core name="785cd178-0ba1-4e38-a987-7dcb2d30b6c6" instanceDir="./785cd178-0ba1-4e38-a987-7dcb2d30b6c6/" config="src/test/resources/learning/solr/conf/solrconfig.xml" schema="src/test/resources/learning/solr/conf/schema.xml" dataDir="."/>
+    <core name="8765cd74-8fe8-4718-aa47-a3bb70716a46" instanceDir="./8765cd74-8fe8-4718-aa47-a3bb70716a46/" config="src/test/resources/learning/solr/conf/solrconfig.xml" schema="src/test/resources/learning/solr/conf/schema.xml" dataDir="."/>
   </cores>
 </solr>
