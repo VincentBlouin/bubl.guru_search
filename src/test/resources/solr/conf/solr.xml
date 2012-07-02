@@ -7,5 +7,7 @@
     <core name="vaoijd" instanceDir="./vaoijd/" config="/home/vince/Projects/triple_brain/module/search/src/test/resources/solr/conf/solrconfig.xml" schema="/home/vince/Projects/triple_brain/module/search/src/test/resources/solr/conf/schema.xml" dataDir="."/>
     <core name="fsdapokcpok" instanceDir="./fsdapokcpok/" config="/home/vince/Projects/triple_brain/module/search/src/test/resources/solr/conf/solrconfig.xml" schema="/home/vince/Projects/triple_brain/module/search/src/test/resources/solr/conf/schema.xml" dataDir="."/>
     <core name="fsdfsd" instanceDir="./fsdfsd/" config="/home/vince/Projects/triple_brain/module/search/src/test/resources/solr/conf/solrconfig.xml" schema="/home/vince/Projects/triple_brain/module/search/src/test/resources/solr/conf/schema.xml" dataDir="."/>
+    <core name="agro" instanceDir="./agro/" config="/home/vince/Projects/triple_brain/module/search/src/test/resources/solr/conf/solrconfig.xml" schema="/home/vince/Projects/triple_brain/module/search/src/test/resources/solr/conf/schema.xml" dataDir="."/>
+    <core name="asdfasdf" instanceDir="./asdfasdf/" config="/home/vince/Projects/triple_brain/module/search/src/test/resources/solr/conf/solrconfig.xml" schema="/home/vince/Projects/triple_brain/module/search/src/test/resources/solr/conf/schema.xml" dataDir="."/>
   </cores>
 </solr>
