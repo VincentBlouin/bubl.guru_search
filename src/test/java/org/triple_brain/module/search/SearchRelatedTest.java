@@ -13,8 +13,6 @@ import org.apache.solr.core.CoreContainer;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.triple_brain.graphmanipulator.jena.graph.JenaEdgeManipulator;
-import org.triple_brain.graphmanipulator.jena.graph.JenaVertexManipulator;
 import org.triple_brain.module.model.User;
 import org.triple_brain.module.model.graph.Vertex;
 
@@ -26,8 +24,6 @@ import java.io.File;
 public class SearchRelatedTest {
 
     protected JenaGraphManipulatorMock graphManipulator;
-    protected JenaVertexManipulator vertexManipulator;
-    protected JenaEdgeManipulator edgeManipulator;
     protected SearchUtils searchUtils;
     protected Vertex vertexA;
     protected Vertex vertexB;
@@ -62,13 +58,9 @@ public class SearchRelatedTest {
         graphIndexer().createUserCore(user);
         deleteAllDocsOfUser(user);
         graphManipulator = JenaGraphManipulatorMock.mockWithUser(user);
-        vertexManipulator = JenaVertexManipulator.withUser(user);
-        edgeManipulator = JenaEdgeManipulator.withUser(user);
         testScenarios = TestScenarios.withUserManipulators(
                 user,
-                graphManipulator,
-                vertexManipulator,
-                edgeManipulator
+                graphManipulator
         );
         makeGraphHave3SerialVerticesWithLongLabels();
         pineApple = testScenarios.addPineAppleVertexToVertex(vertexC);
