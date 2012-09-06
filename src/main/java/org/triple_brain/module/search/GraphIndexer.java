@@ -106,6 +106,10 @@ public class GraphIndexer {
         }
     }
 
+    public void close(){
+        coreContainer.shutdown();
+    }
+
     private SolrInputDocument graphElementToDocument(GraphElement graphElement)throws UnsupportedEncodingException{
         SolrInputDocument document = new SolrInputDocument();
         document.addField("uri", encodeURL(graphElement.id()));

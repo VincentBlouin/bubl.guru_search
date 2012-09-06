@@ -1,8 +1,8 @@
 package org.triple_brain.module.search;
 
 import com.google.inject.Guice;
-import graph.JenaSQLTestModule;
-import graph.mock.JenaGraphManipulatorMock;
+import com.google.inject.Injector;
+import graph.JenaTestModule;
 import graph.scenarios.TestScenarios;
 import graph.scenarios.VerticesCalledABAndC;
 import org.apache.solr.client.solrj.SolrQuery;
@@ -14,8 +14,10 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.triple_brain.module.model.User;
+import org.triple_brain.module.model.graph.GraphMaker;
 import org.triple_brain.module.model.graph.Vertex;
 
+import javax.inject.Inject;
 import java.io.File;
 
 /*
@@ -23,19 +25,26 @@ import java.io.File;
 */
 public class SearchRelatedTest {
 
-    protected JenaGraphManipulatorMock graphManipulator;
+
+    @Inject
+    GraphMaker graphMaker;
+
+    @Inject
+    protected TestScenarios testScenarios;
+
     protected SearchUtils searchUtils;
     protected Vertex vertexA;
     protected Vertex vertexB;
     protected Vertex vertexC;
     protected Vertex pineApple;
     protected User user;
-    protected TestScenarios testScenarios;
     protected static CoreContainer coreContainer;
+
+    protected static Injector injector;
 
     @BeforeClass
     public static void beforeClass()throws Exception{
-        Guice.createInjector(new JenaSQLTestModule());
+        injector = Guice.createInjector(new JenaTestModule());
         coreContainer = getCoreContainerForTests();
     }
 
@@ -53,21 +62,19 @@ public class SearchRelatedTest {
 
     @Before
     public void before() throws Exception{
+        injector.injectMembers(this);
         searchUtils = SearchUtils.usingCoreCoreContainer(coreContainer);
         user = User.withUsernameAndEmail("test", "test@example.org");
         graphIndexer().createUserCore(user);
         deleteAllDocsOfUser(user);
-        graphManipulator = JenaGraphManipulatorMock.mockWithUser(user);
-        testScenarios = TestScenarios.withUserManipulators(
-                user,
-                graphManipulator
-        );
         makeGraphHave3SerialVerticesWithLongLabels();
         pineApple = testScenarios.addPineAppleVertexToVertex(vertexC);
     }
 
     protected void makeGraphHave3SerialVerticesWithLongLabels() throws Exception {
-        VerticesCalledABAndC vertexABAndC = testScenarios.makeGraphHave3SerialVerticesWithLongLabels();
+        VerticesCalledABAndC vertexABAndC = testScenarios.makeGraphHave3SerialVerticesWithLongLabels(
+                graphMaker.createForUser(user)
+        );
         vertexA = vertexABAndC.vertexA();
         vertexB = vertexABAndC.vertexB();
         vertexC = vertexABAndC.vertexC();

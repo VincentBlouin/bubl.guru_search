@@ -9,7 +9,7 @@ import org.apache.solr.core.CoreContainer;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
-import org.triple_brain.graphmanipulator.jena.graph.JenaGraphManipulator;
+import org.triple_brain.graphmanipulator.jena.graph.JenaUserGraph;
 import org.triple_brain.module.model.User;
 
 import java.io.UnsupportedEncodingException;
@@ -35,7 +35,7 @@ public class GraphSearch {
 
     public JSONArray searchVerticesForAutoCompletionByLabelAndUser(String label, User user){
         JSONArray vertices = new JSONArray();
-        JenaGraphManipulator jenaGraphManipulator = JenaGraphManipulator.withUser(user);
+        JenaUserGraph jenaGraphManipulator = JenaUserGraph.withUser(user);
         try{
             SolrServer solrServer = searchUtils.solrServerFromUser(user);
             SolrQuery solrQuery = new SolrQuery();
