@@ -3,8 +3,6 @@ package org.triple_brain.module.search;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import graph.JenaTestModule;
-import graph.scenarios.TestScenarios;
-import graph.scenarios.VerticesCalledABAndC;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.response.QueryResponse;
@@ -16,6 +14,8 @@ import org.junit.BeforeClass;
 import org.triple_brain.module.model.User;
 import org.triple_brain.module.model.graph.GraphMaker;
 import org.triple_brain.module.model.graph.Vertex;
+import org.triple_brain.module.model.graph.scenarios.TestScenarios;
+import org.triple_brain.module.model.graph.scenarios.VerticesCalledABAndC;
 
 import javax.inject.Inject;
 import java.io.File;
