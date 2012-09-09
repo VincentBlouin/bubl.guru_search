@@ -2,7 +2,7 @@ package org.triple_brain.module.search;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import graph.JenaTestModule;
+import org.triple_brain.module.model.graph.jena.JenaTestModule;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.response.QueryResponse;

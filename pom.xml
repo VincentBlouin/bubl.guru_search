@@ -54,25 +54,10 @@
         </dependency>
 
         <!--Tests-->
-
-        <dependency>
-            <groupId>org.triple_brain.module</groupId>
-            <artifactId>triple_brain-model</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-            <classifier>tests</classifier>
-            <scope>test</scope>
-        </dependency>
-
         <dependency>
             <groupId>junit</groupId>
-            <artifactId>junit-dep</artifactId>
-            <version>4.8.2</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.hamcrest</groupId>
-                    <artifactId>hamcrest-core</artifactId>
-                </exclusion>
-            </exclusions>
+            <artifactId>junit</artifactId>
+            <version>4.10</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -83,30 +68,17 @@
         </dependency>
         <dependency>
             <groupId>org.triple_brain.module</groupId>
-            <artifactId>triple_brain-jena-graph-manipulator</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-            <classifier>tests</classifier>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.triple_brain.module</groupId>
-            <artifactId>triple_brain-jena-graph-manipulator</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.triple_brain.module</groupId>
             <artifactId>triple_brain-repository-sql</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <classifier>tests</classifier>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.triple_brain.module</groupId>
-            <artifactId>triple_brain-jena-graph-manipulator</artifactId>
+            <groupId>org.triple_brain.test</groupId>
+            <artifactId>graph_model-test</artifactId>
             <version>1.0.0-SNAPSHOT</version>
+            <classifier>tests</classifier>
+            <scope>test</scope>
         </dependency>
     </dependencies>
-    
 </project>
