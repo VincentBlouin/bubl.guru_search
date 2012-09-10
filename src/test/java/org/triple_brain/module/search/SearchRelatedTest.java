@@ -55,11 +55,6 @@ public class SearchRelatedTest {
         return new CoreContainer(solrHomePath, solrConfigXml);
     }
 
-    @AfterClass
-    public static void afterClass(){
-        coreContainer.shutdown();
-    }
-
     @Before
     public void before() throws Exception{
         injector.injectMembers(this);
@@ -70,6 +65,13 @@ public class SearchRelatedTest {
         makeGraphHave3SerialVerticesWithLongLabels();
         pineApple = testScenarios.addPineAppleVertexToVertex(vertexC);
     }
+
+    @AfterClass
+    public static void afterClass(){
+        coreContainer.shutdown();
+    }
+
+
 
     protected void makeGraphHave3SerialVerticesWithLongLabels() throws Exception {
         VerticesCalledABAndC vertexABAndC = testScenarios.makeGraphHave3SerialVerticesWithLongLabels(

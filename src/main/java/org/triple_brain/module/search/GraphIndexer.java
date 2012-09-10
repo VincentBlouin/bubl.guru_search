@@ -15,7 +15,7 @@ import org.triple_brain.module.model.graph.Vertex;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-import static org.triple_brain.module.common_utils.CommonUtils.encodeURL;
+import static org.triple_brain.module.common_utils.Uris.encodeURL;
 
 /*
 * Copyright Mozilla Public License 1.1

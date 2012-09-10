@@ -15,7 +15,7 @@ import org.triple_brain.module.model.User;
 import java.io.UnsupportedEncodingException;
 import java.util.StringTokenizer;
 
-import static org.triple_brain.module.common_utils.CommonUtils.decodeURL;
+import static org.triple_brain.module.common_utils.Uris.decodeURL;
 import static org.triple_brain.module.model.json.graph.VertexJsonFields.*;
 
 /*
