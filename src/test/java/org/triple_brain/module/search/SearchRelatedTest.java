@@ -1,9 +1,5 @@
 package org.triple_brain.module.search;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import org.triple_brain.module.model.graph.GraphFactory;
-import org.triple_brain.module.model.graph.jena.JenaTestModule;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.response.QueryResponse;
@@ -13,6 +9,8 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.triple_brain.module.model.User;
+import org.triple_brain.module.model.graph.AdaptableGraphComponentTest;
+import org.triple_brain.module.model.graph.GraphFactory;
 import org.triple_brain.module.model.graph.Vertex;
 import org.triple_brain.module.model.graph.scenarios.TestScenarios;
 import org.triple_brain.module.model.graph.scenarios.VerticesCalledABAndC;
@@ -23,9 +21,7 @@ import java.io.File;
 /*
 * Copyright Mozilla Public License 1.1
 */
-public class SearchRelatedTest {
-
-
+public class SearchRelatedTest extends AdaptableGraphComponentTest{
     @Inject
     GraphFactory graphMaker;
 
@@ -40,11 +36,8 @@ public class SearchRelatedTest {
     protected User user;
     protected static CoreContainer coreContainer;
 
-    protected static Injector injector;
-
     @BeforeClass
-    public static void beforeClass()throws Exception{
-        injector = Guice.createInjector(new JenaTestModule());
+    public static void beforeSearchRelatedClass()throws Exception{
         coreContainer = getCoreContainerForTests();
     }
 
@@ -56,8 +49,7 @@ public class SearchRelatedTest {
     }
 
     @Before
-    public void before() throws Exception{
-        injector.injectMembers(this);
+    public void beforeSearchRelatedTest() throws Exception{
         searchUtils = SearchUtils.usingCoreCoreContainer(coreContainer);
         user = User.withUsernameAndEmail("test", "test@example.org");
         graphIndexer().createUserCore(user);
@@ -67,10 +59,9 @@ public class SearchRelatedTest {
     }
 
     @AfterClass
-    public static void afterClass(){
+    public static void afterSearchRelatedClass(){
         coreContainer.shutdown();
     }
-
 
 
     protected void makeGraphHave3SerialVerticesWithLongLabels() throws Exception {

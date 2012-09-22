@@ -9,14 +9,14 @@ import org.apache.solr.core.CoreContainer;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
-import org.triple_brain.graphmanipulator.jena.graph.JenaUserGraph;
 import org.triple_brain.module.model.User;
 
 import java.io.UnsupportedEncodingException;
 import java.util.StringTokenizer;
 
 import static org.triple_brain.module.common_utils.Uris.decodeURL;
-import static org.triple_brain.module.model.json.graph.VertexJsonFields.*;
+import static org.triple_brain.module.model.json.graph.VertexJsonFields.ID;
+import static org.triple_brain.module.model.json.graph.VertexJsonFields.LABEL;
 
 /*
 * Copyright Mozilla Public License 1.1
@@ -35,7 +35,6 @@ public class GraphSearch {
 
     public JSONArray searchVerticesForAutoCompletionByLabelAndUser(String label, User user){
         JSONArray vertices = new JSONArray();
-        JenaUserGraph jenaGraphManipulator = JenaUserGraph.withUser(user);
         try{
             SolrServer solrServer = searchUtils.solrServerFromUser(user);
             SolrQuery solrQuery = new SolrQuery();
