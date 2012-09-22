@@ -2,6 +2,7 @@ package org.triple_brain.module.search;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import org.triple_brain.module.model.graph.GraphFactory;
 import org.triple_brain.module.model.graph.jena.JenaTestModule;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServer;
@@ -12,7 +13,6 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.triple_brain.module.model.User;
-import org.triple_brain.module.model.graph.GraphMaker;
 import org.triple_brain.module.model.graph.Vertex;
 import org.triple_brain.module.model.graph.scenarios.TestScenarios;
 import org.triple_brain.module.model.graph.scenarios.VerticesCalledABAndC;
@@ -27,7 +27,7 @@ public class SearchRelatedTest {
 
 
     @Inject
-    GraphMaker graphMaker;
+    GraphFactory graphMaker;
 
     @Inject
     protected TestScenarios testScenarios;
