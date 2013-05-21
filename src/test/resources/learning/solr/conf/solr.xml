@@ -25,5 +25,6 @@
     <core name="785cd178-0ba1-4e38-a987-7dcb2d30b6c6" instanceDir="./785cd178-0ba1-4e38-a987-7dcb2d30b6c6/" config="src/test/resources/learning/solr/conf/solrconfig.xml" schema="src/test/resources/learning/solr/conf/schema.xml" dataDir="."/>
     <core name="8765cd74-8fe8-4718-aa47-a3bb70716a46" instanceDir="./8765cd74-8fe8-4718-aa47-a3bb70716a46/" config="src/test/resources/learning/solr/conf/solrconfig.xml" schema="src/test/resources/learning/solr/conf/schema.xml" dataDir="."/>
     <core name="a6f776fa-9eaf-456c-b64f-cd899a3bc7ad" instanceDir="./a6f776fa-9eaf-456c-b64f-cd899a3bc7ad/" config="src/test/resources/learning/solr/conf/solrconfig.xml" schema="src/test/resources/learning/solr/conf/schema.xml" dataDir="."/>
+    <core name="f3b66fb7-c82d-4cca-98f2-0b960ea08e5f" instanceDir="./f3b66fb7-c82d-4cca-98f2-0b960ea08e5f/" config="src/test/resources/learning/solr/conf/solrconfig.xml" schema="src/test/resources/learning/solr/conf/schema.xml" dataDir="."/>
   </cores>
 </solr>
