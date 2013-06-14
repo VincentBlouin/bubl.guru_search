@@ -28,8 +28,8 @@ import static org.junit.Assert.*;
 * Copyright Mozilla Public License 1.1
 */
 public class SolrJTest {
-    String solrHomeRelativePath = "src/test/resources/learning/solr/";
-    String solrXMLHomeRelativePath = "conf/solr.xml";
+    String solrHomeRelativePath = "src/test/resources/learning/org.triple_brain.module.search.solr/";
+    String solrXMLHomeRelativePath = "conf/org.triple_brain.module.search.solr.xml";
     String solrConfigHomeRelativePath = "conf/solrconfig.xml";
     String solrSchemaHomeRelativePath = "conf/schema.xml";
     String defaultCollectionName = "collection1";

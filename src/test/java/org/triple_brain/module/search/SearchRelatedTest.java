@@ -45,7 +45,7 @@ public class SearchRelatedTest extends AdaptableGraphComponentTest{
     }
 
     protected static CoreContainer getCoreContainerForTests()throws Exception{
-        String solrHomePath = "src/test/resources/solr/";
+        String solrHomePath = "src/main/resources/solr/";
         String solrXMLPath = "conf/solr.xml";
         File solrConfigXml = new File(solrHomePath + solrXMLPath);
         return new CoreContainer(solrHomePath, solrConfigXml);
