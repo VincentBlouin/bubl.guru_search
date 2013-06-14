@@ -36,11 +36,14 @@ public class GraphSearch {
     public JSONArray searchVerticesForAutoCompletionByLabelAndUser(String label, User user){
         JSONArray vertices = new JSONArray();
         try{
-            SolrServer solrServer = searchUtils.solrServerFromUser(user);
+            SolrServer solrServer = searchUtils.getServer();
             SolrQuery solrQuery = new SolrQuery();
             String sentenceMinusLastWord = sentenceMinusLastWord(label);
             String lastWord = lastWordOfSentence(label);
-            solrQuery.setQuery("label:"+sentenceMinusLastWord +"*");
+            solrQuery.setQuery(
+                    "label:"+sentenceMinusLastWord +"* AND " +
+                            "owner_username:" + user.username()
+            );
             solrQuery.addFilterQuery("label:"+sentenceMinusLastWord+"*"+lastWord+"*");
             QueryResponse queryResponse = solrServer.query(solrQuery);
             for(SolrDocument document : queryResponse.getResults()){

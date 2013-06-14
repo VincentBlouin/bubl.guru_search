@@ -2,7 +2,5 @@
 <solr persistent="true">
   <cores adminPath="/admin/cores">
     <core name="collection1" instanceDir="./"/>
-    <core name="test_core" instanceDir="./test_core/" config="src/test/resources/learning/solr/conf/solrconfig.xml" schema="src/test/resources/learning/solr/conf/schema.xml" dataDir="."/>
-    <core name="30660d0f-d78b-41dd-83a5-f11b79b6d0f4" instanceDir="./30660d0f-d78b-41dd-83a5-f11b79b6d0f4/" config="src/test/resources/learning/solr/conf/solrconfig.xml" schema="src/test/resources/learning/solr/conf/schema.xml" dataDir="."/>
   </cores>
 </solr>

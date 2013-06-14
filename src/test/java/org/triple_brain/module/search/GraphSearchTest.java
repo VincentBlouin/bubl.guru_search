@@ -5,7 +5,9 @@ import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
 
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.triple_brain.module.model.json.graph.VertexJsonFields.LABEL;
 /*
 * Copyright Mozilla Public License 1.1
@@ -26,6 +28,23 @@ public class GraphSearchTest extends SearchRelatedTest {
         assertThat(firstVertex.getString(LABEL), is("vertex Cadeau"));
         vertices = graphSearch.searchVerticesForAutoCompletionByLabelAndUser("pine A", user);
         assertThat(vertices.length(), is(1));
+    }
+
+    @Test
+    public void cant_search_in_vertices_of_another_user() throws Exception{
+        indexVertexABAndC();
+        indexVertex(pineApple);
+        GraphSearch graphSearch = GraphSearch.withCoreContainer(coreContainer);
+        JSONArray vertices = graphSearch.searchVerticesForAutoCompletionByLabelAndUser(
+                "vert",
+                user
+        );
+        assertTrue(vertices.length() > 0);
+        vertices = graphSearch.searchVerticesForAutoCompletionByLabelAndUser(
+                "vert",
+                user2
+        );
+        assertFalse(vertices.length() > 0);
     }
 
 }

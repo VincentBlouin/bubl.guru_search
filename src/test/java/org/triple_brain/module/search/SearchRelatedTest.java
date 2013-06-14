@@ -29,11 +29,14 @@ public class SearchRelatedTest extends AdaptableGraphComponentTest{
     protected TestScenarios testScenarios;
 
     protected SearchUtils searchUtils;
+
     protected Vertex vertexA;
     protected Vertex vertexB;
     protected Vertex vertexC;
     protected Vertex pineApple;
     protected User user;
+    protected User user2;
+    protected Vertex vertexOfUser2;
     protected static CoreContainer coreContainer;
 
     @BeforeClass
@@ -52,9 +55,11 @@ public class SearchRelatedTest extends AdaptableGraphComponentTest{
     public void beforeSearchRelatedTest() throws Exception{
         searchUtils = SearchUtils.usingCoreCoreContainer(coreContainer);
         user = User.withUsernameAndEmail("test", "test@example.org");
-        graphIndexer().createUserCore(user);
+        user2 = User.withUsernameAndEmail("test2", "test2@example.org");
         deleteAllDocsOfUser(user);
+        deleteAllDocsOfUser(user2);
         makeGraphHave3SerialVerticesWithLongLabels();
+        vertexOfUser2 = graphMaker.createForUser(user2).defaultVertex();
         pineApple = testScenarios.addPineAppleVertexToVertex(vertexC);
     }
 
@@ -74,21 +79,21 @@ public class SearchRelatedTest extends AdaptableGraphComponentTest{
     }
 
     protected void deleteAllDocsOfUser(User user)throws Exception{
-        SolrServer solrServer = solrServerFromUser(user);
-        solrServer.deleteByQuery("*:*");
+        SolrServer solrServer = solrServer();
+        solrServer.deleteByQuery("owner_username:" + user.username());
         solrServer.commit();
     }
 
     protected SolrDocumentList resultsOfSearchQuery(SolrQuery solrQuery)throws Exception{
-        SolrServer solrServer = solrServerFromUser(user);
+        SolrServer solrServer = solrServer();
         QueryResponse queryResponse = solrServer.query(solrQuery);
         return queryResponse.getResults() == null ?
                 new SolrDocumentList() :
                 solrServer.query(solrQuery).getResults();
     }
 
-    protected SolrServer solrServerFromUser(User user){
-        return searchUtils.solrServerFromUser(user);
+    protected SolrServer solrServer(){
+        return searchUtils.getServer();
     }
 
     protected GraphIndexer graphIndexer(){
