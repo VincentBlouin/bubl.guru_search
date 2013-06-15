@@ -8,8 +8,10 @@
     </types>
     <fields>
         <field name="uri" type="string" indexed="true" stored="true" required="true" />
+        <field name="owner_username" type="string" indexed="true" stored="false" required="true"/>
         <field name="is_vertex" type="boolean" indexed="true" stored="true"/>
         <field name="label" type="string" indexed="true" stored="true"/>
-        <field name="owner_username" type="string" indexed="true" stored="false" required="true"/>
+        <field name="note" type="string" indexed="false" stored="true"/>
+        <field name="relation_name" multiValued="true" type="string" indexed="false" stored="true"/>
     </fields>
 </schema>

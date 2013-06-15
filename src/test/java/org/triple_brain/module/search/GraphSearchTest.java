@@ -3,6 +3,8 @@ package org.triple_brain.module.search;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
+import org.triple_brain.module.common_utils.JsonUtils;
+import org.triple_brain.module.search.json.SearchJsonConverter;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertFalse;
@@ -45,6 +47,59 @@ public class GraphSearchTest extends SearchRelatedTest {
                 user2
         );
         assertFalse(vertices.length() > 0);
+    }
+
+    @Test
+    public void vertex_note_can_be_retrieved_from_search()throws Exception{
+        vertexA.note("A description");
+        indexVertexABAndC();
+        GraphSearch graphSearch = GraphSearch.withCoreContainer(coreContainer);
+        JSONArray searchResults = graphSearch.searchVerticesForAutoCompletionByLabelAndUser(
+                vertexA.label(),
+                user
+        );
+        String note = searchResults.getJSONObject(0).getString("note");
+        assertThat(note, is("A description"));
+    }
+
+    @Test
+    public void vertex_relations_name_can_be_retrieved()throws Exception{
+        indexVertexABAndC();
+        GraphSearch graphSearch = GraphSearch.withCoreContainer(coreContainer);
+        JSONArray searchResults = graphSearch.searchVerticesForAutoCompletionByLabelAndUser(
+                vertexA.label(),
+                user
+        );
+        JSONObject result = searchResults.getJSONObject(0);
+        JSONArray relationsName = result.getJSONArray(
+                SearchJsonConverter.RELATIONS_NAME
+        );
+        assertTrue(JsonUtils.containsString(
+                relationsName,
+                "between vertex A and vertex B"
+        ));
+    }
+
+    @Test
+    public void incoming_and_outgoing_vertex_relations_name_can_be_retrieved()throws Exception{
+        indexVertexABAndC();
+        GraphSearch graphSearch = GraphSearch.withCoreContainer(coreContainer);
+        JSONArray searchResults = graphSearch.searchVerticesForAutoCompletionByLabelAndUser(
+                vertexB.label(),
+                user
+        );
+        JSONObject result = searchResults.getJSONObject(0);
+        JSONArray relationsName = result.getJSONArray(
+                SearchJsonConverter.RELATIONS_NAME
+        );
+        assertTrue(JsonUtils.containsString(
+                relationsName,
+                "between vertex A and vertex B"
+        ));
+        assertTrue(JsonUtils.containsString(
+                relationsName,
+                "between vertex B and vertex C"
+        ));
     }
 
 }

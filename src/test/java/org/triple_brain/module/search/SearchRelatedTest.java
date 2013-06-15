@@ -54,8 +54,8 @@ public class SearchRelatedTest extends AdaptableGraphComponentTest{
     @Before
     public void beforeSearchRelatedTest() throws Exception{
         searchUtils = SearchUtils.usingCoreCoreContainer(coreContainer);
-        user = User.withUsernameAndEmail("test", "test@example.org");
-        user2 = User.withUsernameAndEmail("test2", "test2@example.org");
+        user = User.withUsernameAndEmail("test2", "test@2example.org");
+        user2 = User.withUsernameAndEmail("test", "test@example.org");
         deleteAllDocsOfUser(user);
         deleteAllDocsOfUser(user2);
         makeGraphHave3SerialVerticesWithLongLabels();

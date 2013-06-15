@@ -7,16 +7,10 @@ import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.core.CoreContainer;
 import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
 import org.triple_brain.module.model.User;
+import org.triple_brain.module.search.json.SearchJsonConverter;
 
-import java.io.UnsupportedEncodingException;
 import java.util.StringTokenizer;
-
-import static org.triple_brain.module.common_utils.Uris.decodeURL;
-import static org.triple_brain.module.model.json.graph.VertexJsonFields.ID;
-import static org.triple_brain.module.model.json.graph.VertexJsonFields.LABEL;
 
 /*
 * Copyright Mozilla Public License 1.1
@@ -47,13 +41,12 @@ public class GraphSearch {
             solrQuery.addFilterQuery("label:"+sentenceMinusLastWord+"*"+lastWord+"*");
             QueryResponse queryResponse = solrServer.query(solrQuery);
             for(SolrDocument document : queryResponse.getResults()){
-                JSONObject searchResult = new JSONObject()
-                        .put(ID, decodeURL((String) document.get("uri")))
-                        .put(LABEL, document.get("label"));
-                vertices.put(searchResult);
+                vertices.put(SearchJsonConverter.documentToJson(
+                        document
+                ));
 
             }
-        }catch (SolrServerException | UnsupportedEncodingException | JSONException e){
+        }catch (SolrServerException e){
             throw new RuntimeException(e);
         }
         return vertices;

@@ -5,6 +5,7 @@ import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.common.SolrInputDocument;
 import org.apache.solr.core.CoreContainer;
 import org.triple_brain.module.model.User;
+import org.triple_brain.module.model.graph.Edge;
 import org.triple_brain.module.model.graph.GraphElement;
 import org.triple_brain.module.model.graph.Vertex;
 
@@ -41,11 +42,25 @@ public class GraphIndexer {
                 coreContainer.getCore(coreContainer.getDefaultCoreName()).getCoreDescriptor().getSchemaName();
     }
 
+    public void indexVertex(Vertex vertex) {
+        indexVertexOfUser(
+                vertex,
+                vertex.owner()
+        );
+    }
+
     public void indexVertexOfUser(Vertex vertex, User user) {
         try {
             SolrInputDocument document = graphElementToDocument(vertex);
             document.addField("is_vertex", true);
             document.addField("owner_username", user.username());
+            document.addField("note", vertex.note());
+            for(Edge edge : vertex.connectedEdges()){
+               document.addField(
+                       "relation_name",
+                       edge.label()
+               );
+            }
             SolrServer solrServer = searchUtils.getServer();
             solrServer.add(document);
             solrServer.commit();
