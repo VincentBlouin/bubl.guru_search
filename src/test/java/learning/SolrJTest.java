@@ -12,7 +12,9 @@ import org.apache.solr.common.params.CoreAdminParams;
 import org.apache.solr.core.CoreContainer;
 import org.apache.solr.core.CoreDescriptor;
 import org.apache.solr.core.SolrCore;
+import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -41,6 +43,11 @@ public class SolrJTest {
         solrServer = startUpSolrServer();
         solrServer.deleteByQuery("*:*");
         solrServer.commit();
+    }
+
+    @After
+    public void after(){
+        coreContainer.shutdown();
     }
 
     private SolrServer startUpSolrServer()throws Exception{
@@ -123,6 +130,7 @@ public class SolrJTest {
     }
 
     @Test
+    @Ignore("its taking memory to create multicores and we also dont need that feature")
     public void can_create_another_core()throws Exception{
         QueryResponse queryResponse = createCoreWithName(
                 UUID.randomUUID().toString()
@@ -134,6 +142,7 @@ public class SolrJTest {
     }
 
     @Test
+    @Ignore("its taking memory to create multicores and we also dont need that feature")
     public void can_query_a_new_core()throws Exception{
         String coreName = UUID.randomUUID().toString();
         SolrCore solrCore = coreContainer.create(new CoreDescriptor(
