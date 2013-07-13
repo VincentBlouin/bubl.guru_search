@@ -109,6 +109,6 @@ public class SearchRelatedTest extends AdaptableGraphComponentTest{
 
     protected void indexVertex(Vertex vertex){
         GraphIndexer graphIndexer = GraphIndexer.withCoreContainer(coreContainer);
-        graphIndexer.indexVertexOfUser(pineApple, user);
+        graphIndexer.indexVertexOfUser(vertex, user);
     }
 }

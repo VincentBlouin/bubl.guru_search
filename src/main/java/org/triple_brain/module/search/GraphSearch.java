@@ -36,7 +36,8 @@ public class GraphSearch {
             String lastWord = lastWordOfSentence(label);
             solrQuery.setQuery(
                     "label:"+sentenceMinusLastWord +"* AND " +
-                            "owner_username:" + user.username()
+                            "(owner_username:" + user.username() + " OR " +
+                            "is_public:true)"
             );
             solrQuery.addFilterQuery("label:"+sentenceMinusLastWord+"*"+lastWord+"*");
             QueryResponse queryResponse = solrServer.query(solrQuery);

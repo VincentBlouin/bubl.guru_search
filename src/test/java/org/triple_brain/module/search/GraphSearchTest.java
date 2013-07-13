@@ -102,4 +102,22 @@ public class GraphSearchTest extends SearchRelatedTest {
         ));
     }
 
+    @Test
+    public void can_search_for_other_users_public_vertices(){
+        indexVertexABAndC();
+        GraphSearch graphSearch = GraphSearch.withCoreContainer(coreContainer);
+        JSONArray vertices = graphSearch.searchVerticesForAutoCompletionByLabelAndUser(
+                "vert",
+                user2
+        );
+        assertFalse(vertices.length() > 0);
+        vertexA.makePublic();
+        indexVertex(vertexA);
+        vertices = graphSearch.searchVerticesForAutoCompletionByLabelAndUser(
+                "vert",
+                user2
+        );
+        assertTrue(vertices.length() > 0);
+    }
+
 }
