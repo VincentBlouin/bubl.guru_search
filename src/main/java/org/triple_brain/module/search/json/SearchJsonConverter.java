@@ -16,13 +16,15 @@ import static org.triple_brain.module.model.json.graph.VertexJsonFields.*;
 */
 public class SearchJsonConverter {
     public static String RELATIONS_NAME = "relations_name";
+    public static String OWNER_USERNAME = "owner_username";
 
     public static JSONObject documentToJson(SolrDocument document){
         try{
             JSONObject documentAsJson = new JSONObject()
                     .put(ID, decodeURL((String) document.get("uri")))
                     .put(LABEL, document.get("label"))
-                    .put(NOTE, document.get("note"));
+                    .put(NOTE, document.get("note"))
+                    .put(OWNER_USERNAME, document.get("owner_username"));
             documentAsJson.put(
                     RELATIONS_NAME,
                     buildRelationsName(document)
