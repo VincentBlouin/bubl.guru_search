@@ -22,13 +22,13 @@ public class GraphSearchTest extends SearchRelatedTest {
         indexVertex(pineApple);
         GraphSearch graphSearch = GraphSearch.withCoreContainer(coreContainer);
         JSONArray vertices;
-        vertices = graphSearch.searchVerticesForAutoCompletionByLabelAndUser("vert", user);
+        vertices = graphSearch.searchOnlyForOwnVerticesForAutoCompletionByLabel("vert", user);
         assertThat(vertices.length(), is(3));
-        vertices = graphSearch.searchVerticesForAutoCompletionByLabelAndUser("vertex Cad", user);
+        vertices = graphSearch.searchOnlyForOwnVerticesForAutoCompletionByLabel("vertex Cad", user);
         assertThat(vertices.length(), is(1));
         JSONObject firstVertex = vertices.getJSONObject(0);
         assertThat(firstVertex.getString(LABEL), is("vertex Cadeau"));
-        vertices = graphSearch.searchVerticesForAutoCompletionByLabelAndUser("pine A", user);
+        vertices = graphSearch.searchOnlyForOwnVerticesForAutoCompletionByLabel("pine A", user);
         assertThat(vertices.length(), is(1));
     }
 
@@ -37,12 +37,12 @@ public class GraphSearchTest extends SearchRelatedTest {
         indexVertexABAndC();
         indexVertex(pineApple);
         GraphSearch graphSearch = GraphSearch.withCoreContainer(coreContainer);
-        JSONArray vertices = graphSearch.searchVerticesForAutoCompletionByLabelAndUser(
+        JSONArray vertices = graphSearch.searchOnlyForOwnVerticesForAutoCompletionByLabel(
                 "vert",
                 user
         );
         assertTrue(vertices.length() > 0);
-        vertices = graphSearch.searchVerticesForAutoCompletionByLabelAndUser(
+        vertices = graphSearch.searchOnlyForOwnVerticesForAutoCompletionByLabel(
                 "vert",
                 user2
         );
@@ -54,7 +54,7 @@ public class GraphSearchTest extends SearchRelatedTest {
         vertexA.note("A description");
         indexVertexABAndC();
         GraphSearch graphSearch = GraphSearch.withCoreContainer(coreContainer);
-        JSONArray searchResults = graphSearch.searchVerticesForAutoCompletionByLabelAndUser(
+        JSONArray searchResults = graphSearch.searchOnlyForOwnVerticesForAutoCompletionByLabel(
                 vertexA.label(),
                 user
         );
@@ -66,7 +66,7 @@ public class GraphSearchTest extends SearchRelatedTest {
     public void vertex_relations_name_can_be_retrieved()throws Exception{
         indexVertexABAndC();
         GraphSearch graphSearch = GraphSearch.withCoreContainer(coreContainer);
-        JSONArray searchResults = graphSearch.searchVerticesForAutoCompletionByLabelAndUser(
+        JSONArray searchResults = graphSearch.searchOnlyForOwnVerticesForAutoCompletionByLabel(
                 vertexA.label(),
                 user
         );
@@ -84,7 +84,7 @@ public class GraphSearchTest extends SearchRelatedTest {
     public void incoming_and_outgoing_vertex_relations_name_can_be_retrieved()throws Exception{
         indexVertexABAndC();
         GraphSearch graphSearch = GraphSearch.withCoreContainer(coreContainer);
-        JSONArray searchResults = graphSearch.searchVerticesForAutoCompletionByLabelAndUser(
+        JSONArray searchResults = graphSearch.searchOnlyForOwnVerticesForAutoCompletionByLabel(
                 vertexB.label(),
                 user
         );
@@ -106,18 +106,35 @@ public class GraphSearchTest extends SearchRelatedTest {
     public void can_search_for_other_users_public_vertices(){
         indexVertexABAndC();
         GraphSearch graphSearch = GraphSearch.withCoreContainer(coreContainer);
-        JSONArray vertices = graphSearch.searchVerticesForAutoCompletionByLabelAndUser(
+        JSONArray vertices = graphSearch.searchOwnVerticesAndPublicOnesForAutoCompletionByLabel(
                 "vert",
                 user2
         );
         assertFalse(vertices.length() > 0);
         vertexA.makePublic();
         indexVertex(vertexA);
-        vertices = graphSearch.searchVerticesForAutoCompletionByLabelAndUser(
+        vertices = graphSearch.searchOwnVerticesAndPublicOnesForAutoCompletionByLabel(
                 "vert",
                 user2
         );
         assertTrue(vertices.length() > 0);
+    }
+
+    @Test
+    public void searching_for_own_vertices_only_does_not_return_vertices_of_other_users(){
+        vertexA.makePublic();
+        indexVertexABAndC();
+        GraphSearch graphSearch = GraphSearch.withCoreContainer(coreContainer);
+        JSONArray vertices = graphSearch.searchOwnVerticesAndPublicOnesForAutoCompletionByLabel(
+                "vert",
+                user2
+        );
+        assertTrue(vertices.length() > 0);
+        vertices = graphSearch.searchOnlyForOwnVerticesForAutoCompletionByLabel(
+                "vert",
+                user2
+        );
+        assertFalse(vertices.length() > 0);
     }
 
 }

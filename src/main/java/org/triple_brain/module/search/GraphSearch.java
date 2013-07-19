@@ -19,56 +19,74 @@ public class GraphSearch {
 
     private SearchUtils searchUtils;
 
-    public static GraphSearch withCoreContainer(CoreContainer coreContainer){
+    public static GraphSearch withCoreContainer(CoreContainer coreContainer) {
         return new GraphSearch(coreContainer);
     }
 
-    private GraphSearch(CoreContainer coreContainer){
+    private GraphSearch(CoreContainer coreContainer) {
         this.searchUtils = SearchUtils.usingCoreCoreContainer(coreContainer);
     }
 
-    public JSONArray searchVerticesForAutoCompletionByLabelAndUser(String label, User user){
+    public JSONArray searchOwnVerticesAndPublicOnesForAutoCompletionByLabel(String label, User user) {
+        return searchForVerticesForAutoCompletionByLabel(
+                label,
+                user,
+                false
+        );
+    }
+
+    public JSONArray searchOnlyForOwnVerticesForAutoCompletionByLabel(String label, User user) {
+        return searchForVerticesForAutoCompletionByLabel(
+                label,
+                user,
+                true
+        );
+    }
+
+    private JSONArray searchForVerticesForAutoCompletionByLabel(String label, User user, boolean onlyOwnVertices) {
         JSONArray vertices = new JSONArray();
-        try{
+        try {
             SolrServer solrServer = searchUtils.getServer();
             SolrQuery solrQuery = new SolrQuery();
             String sentenceMinusLastWord = sentenceMinusLastWord(label);
             String lastWord = lastWordOfSentence(label);
             solrQuery.setQuery(
-                    "label:"+sentenceMinusLastWord +"* AND " +
-                            "(owner_username:" + user.username() + " OR " +
-                            "is_public:true)"
+                    "label:" + sentenceMinusLastWord + "* AND " +
+                            "(owner_username:" + user.username() +
+                            (onlyOwnVertices ?
+                                    ")" :
+                                    " OR " + "is_public:true)")
             );
-            solrQuery.addFilterQuery("label:"+sentenceMinusLastWord+"*"+lastWord+"*");
+            solrQuery.addFilterQuery("label:" + sentenceMinusLastWord + "*" + lastWord + "*");
             QueryResponse queryResponse = solrServer.query(solrQuery);
-            for(SolrDocument document : queryResponse.getResults()){
+            for (SolrDocument document : queryResponse.getResults()) {
                 vertices.put(SearchJsonConverter.documentToJson(
                         document
                 ));
 
             }
-        }catch (SolrServerException e){
+        } catch (SolrServerException e) {
             throw new RuntimeException(e);
         }
         return vertices;
     }
 
-    private String lastWordOfSentence(String sentence){
+    private String lastWordOfSentence(String sentence) {
         StringTokenizer tokenizer = new StringTokenizer(
                 sentence,
                 " "
         );
         String lastWord = "";
-        while(tokenizer.hasMoreTokens()){
+        while (tokenizer.hasMoreTokens()) {
             lastWord = tokenizer.nextToken();
         }
         return lastWord;
     }
 
-    private String sentenceMinusLastWord(String sentence){
-        if(sentence.contains(" ")){
+    private String sentenceMinusLastWord(String sentence) {
+        if (sentence.contains(" ")) {
             return sentence.substring(0, sentence.lastIndexOf(" "));
-        }else{
+        } else {
             return "";
         }
     }
