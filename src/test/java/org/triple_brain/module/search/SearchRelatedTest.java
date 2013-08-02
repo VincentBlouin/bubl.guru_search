@@ -57,12 +57,12 @@ public class SearchRelatedTest extends AdaptableGraphComponentTest{
         user = User.withUsernameEmailAndLocales(
                 "test2",
                 "test@2example.org",
-                ""
+                "[fr]"
         );
         user2 = User.withUsernameEmailAndLocales(
                 "test",
                 "test@example.org",
-                ""
+                "[fr]"
         );
         deleteAllDocsOfUser(user);
         deleteAllDocsOfUser(user2);
