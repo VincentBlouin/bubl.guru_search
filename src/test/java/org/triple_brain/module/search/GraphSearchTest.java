@@ -2,14 +2,13 @@ package org.triple_brain.module.search;
 
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.triple_brain.module.common_utils.JsonUtils;
 import org.triple_brain.module.search.json.SearchJsonConverter;
 
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.triple_brain.module.model.json.graph.VertexJsonFields.LABEL;
 /*
 * Copyright Mozilla Public License 1.1
@@ -137,4 +136,25 @@ public class GraphSearchTest extends SearchRelatedTest {
         assertFalse(vertices.length() > 0);
     }
 
+    @Test
+    @Ignore
+    //todo
+    public void search_goes_beyond_two_first_words(){
+        vertexA.label(
+                "bonjour monsieur proute"
+        );
+        vertexB.label(
+                "bonjour monsieur pratte"
+        );
+        vertexC.label(
+                "bonjour monsieur avion"
+        );
+        indexVertexABAndC();
+        GraphSearch graphSearch = GraphSearch.withCoreContainer(coreContainer);
+        JSONArray vertices = graphSearch.searchOwnVerticesAndPublicOnesForAutoCompletionByLabel(
+                "bonjour monsieur pr",
+                user
+        );
+        assertThat(vertices.length(), is(2));
+    }
 }
