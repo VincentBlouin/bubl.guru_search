@@ -80,10 +80,14 @@ public class GraphIndexer {
         }
     }
 
-    public void deleteVertexOfUser(Vertex vertex, User user) {
+    public void deleteGraphElementOfUser(GraphElement graphElement, User user) {
         try {
             SolrServer solrServer = searchUtils.getServer();
-            solrServer.deleteByQuery("uri:" + encodeURL(vertex.id()));
+            solrServer.deleteByQuery(
+                    "uri:" + encodeURL(
+                            graphElement.id()
+                    )
+            );
             solrServer.commit();
         } catch (IOException | SolrServerException e) {
             throw new RuntimeException(e);
