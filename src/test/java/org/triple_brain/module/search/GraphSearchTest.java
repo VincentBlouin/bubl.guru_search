@@ -17,7 +17,7 @@ public class GraphSearchTest extends SearchRelatedTest {
 
     @Test
     public void can_search_vertices_for_auto_completion() throws Exception{
-        indexVertexABAndC();
+        indexGraph();
         indexVertex(pineApple);
         GraphSearch graphSearch = GraphSearch.withCoreContainer(coreContainer);
         JSONArray vertices;
@@ -33,7 +33,7 @@ public class GraphSearchTest extends SearchRelatedTest {
 
     @Test
     public void cant_search_in_vertices_of_another_user() throws Exception{
-        indexVertexABAndC();
+        indexGraph();
         indexVertex(pineApple);
         GraphSearch graphSearch = GraphSearch.withCoreContainer(coreContainer);
         JSONArray vertices = graphSearch.searchOnlyForOwnVerticesForAutoCompletionByLabel(
@@ -51,7 +51,7 @@ public class GraphSearchTest extends SearchRelatedTest {
     @Test
     public void vertex_note_can_be_retrieved_from_search()throws Exception{
         vertexA.note("A description");
-        indexVertexABAndC();
+        indexGraph();
         GraphSearch graphSearch = GraphSearch.withCoreContainer(coreContainer);
         JSONArray searchResults = graphSearch.searchOnlyForOwnVerticesForAutoCompletionByLabel(
                 vertexA.label(),
@@ -63,7 +63,7 @@ public class GraphSearchTest extends SearchRelatedTest {
 
     @Test
     public void vertex_relations_name_can_be_retrieved()throws Exception{
-        indexVertexABAndC();
+        indexGraph();
         GraphSearch graphSearch = GraphSearch.withCoreContainer(coreContainer);
         JSONArray searchResults = graphSearch.searchOnlyForOwnVerticesForAutoCompletionByLabel(
                 vertexA.label(),
@@ -81,7 +81,7 @@ public class GraphSearchTest extends SearchRelatedTest {
 
     @Test
     public void incoming_and_outgoing_vertex_relations_name_can_be_retrieved()throws Exception{
-        indexVertexABAndC();
+        indexGraph();
         GraphSearch graphSearch = GraphSearch.withCoreContainer(coreContainer);
         JSONArray searchResults = graphSearch.searchOnlyForOwnVerticesForAutoCompletionByLabel(
                 vertexB.label(),
@@ -103,7 +103,7 @@ public class GraphSearchTest extends SearchRelatedTest {
 
     @Test
     public void can_search_for_other_users_public_vertices(){
-        indexVertexABAndC();
+        indexGraph();
         GraphSearch graphSearch = GraphSearch.withCoreContainer(coreContainer);
         JSONArray vertices = graphSearch.searchOwnVerticesAndPublicOnesForAutoCompletionByLabel(
                 "vert",
@@ -122,7 +122,7 @@ public class GraphSearchTest extends SearchRelatedTest {
     @Test
     public void searching_for_own_vertices_only_does_not_return_vertices_of_other_users(){
         vertexA.makePublic();
-        indexVertexABAndC();
+        indexGraph();
         GraphSearch graphSearch = GraphSearch.withCoreContainer(coreContainer);
         JSONArray vertices = graphSearch.searchOwnVerticesAndPublicOnesForAutoCompletionByLabel(
                 "vert",
@@ -137,6 +137,19 @@ public class GraphSearchTest extends SearchRelatedTest {
     }
 
     @Test
+    public void can_search_relations(){
+        indexGraph();
+        GraphSearch graphSearch = GraphSearch.withCoreContainer(coreContainer);
+        JSONArray results = graphSearch.searchRelationsForAutoCompletionByLabel(
+                "between vertex",
+                user
+        );
+        assertThat(results.length(), is(2));
+    }
+
+
+
+    @Test
     @Ignore
     //todo
     public void search_goes_beyond_two_first_words(){
@@ -149,7 +162,7 @@ public class GraphSearchTest extends SearchRelatedTest {
         vertexC.label(
                 "bonjour monsieur avion"
         );
-        indexVertexABAndC();
+        indexGraph();
         GraphSearch graphSearch = GraphSearch.withCoreContainer(coreContainer);
         JSONArray vertices = graphSearch.searchOwnVerticesAndPublicOnesForAutoCompletionByLabel(
                 "bonjour monsieur pr",

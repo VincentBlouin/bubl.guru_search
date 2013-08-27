@@ -108,11 +108,19 @@ public class SearchRelatedTest extends AdaptableGraphComponentTest{
         return GraphIndexer.withCoreContainer(coreContainer);
     }
 
-    protected void indexVertexABAndC(){
+    protected void indexGraph(){
         GraphIndexer graphIndexer = GraphIndexer.withCoreContainer(coreContainer);
         graphIndexer.indexVertexOfUser(vertexA, user);
         graphIndexer.indexVertexOfUser(vertexB, user);
         graphIndexer.indexVertexOfUser(vertexC, user);
+        graphIndexer.indexRelationOfUser(
+                vertexA.connectedEdges().iterator().next(),
+                user
+        );
+        graphIndexer.indexRelationOfUser(
+                vertexC.connectedEdges().iterator().next(),
+                user
+        );
     }
 
     protected void indexVertex(Vertex vertex){

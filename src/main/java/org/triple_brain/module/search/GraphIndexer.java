@@ -10,7 +10,6 @@ import org.triple_brain.module.model.graph.GraphElement;
 import org.triple_brain.module.model.graph.Vertex;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 
 import static org.triple_brain.module.common_utils.Uris.encodeURL;
 
@@ -51,17 +50,28 @@ public class GraphIndexer {
 
     public void indexVertexOfUser(Vertex vertex, User user) {
         try {
-            SolrInputDocument document = graphElementToDocument(vertex);
+            SolrInputDocument document = graphElementToDocument(vertex, user);
             document.addField("is_vertex", true);
             document.addField("is_public", vertex.isPublic());
-            document.addField("owner_username", user.username());
             document.addField("note", vertex.note());
-            for(Edge edge : vertex.connectedEdges()){
-               document.addField(
-                       "relation_name",
-                       edge.label()
-               );
+            for (Edge edge : vertex.connectedEdges()) {
+                document.addField(
+                        "relation_name",
+                        edge.label()
+                );
             }
+            SolrServer solrServer = searchUtils.getServer();
+            solrServer.add(document);
+            solrServer.commit();
+        } catch (IOException | SolrServerException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void indexRelationOfUser(Edge edge, User user) {
+        try {
+            SolrInputDocument document = graphElementToDocument(edge, user);
+            document.addField("is_vertex", false);
             SolrServer solrServer = searchUtils.getServer();
             solrServer.add(document);
             solrServer.commit();
@@ -84,10 +94,11 @@ public class GraphIndexer {
         coreContainer.shutdown();
     }
 
-    private SolrInputDocument graphElementToDocument(GraphElement graphElement) throws UnsupportedEncodingException {
+    private SolrInputDocument graphElementToDocument(GraphElement graphElement, User owner) {
         SolrInputDocument document = new SolrInputDocument();
         document.addField("uri", encodeURL(graphElement.id()));
         document.addField("label", graphElement.label());
+        document.addField("owner_username", owner.username());
         return document;
     }
 }

@@ -10,12 +10,18 @@ import org.codehaus.jettison.json.JSONArray;
 import org.triple_brain.module.model.User;
 import org.triple_brain.module.search.json.SearchJsonConverter;
 
+import java.util.HashSet;
 import java.util.StringTokenizer;
 
 /*
 * Copyright Mozilla Public License 1.1
 */
 public class GraphSearch {
+
+    private enum SearchParam {
+        ONLY_OWN_VERTICES,
+        IS_VERTEX
+    };
 
     private SearchUtils searchUtils;
 
@@ -28,39 +34,55 @@ public class GraphSearch {
     }
 
     public JSONArray searchOwnVerticesAndPublicOnesForAutoCompletionByLabel(String label, User user) {
-        return searchForVerticesForAutoCompletionByLabel(
+        return searchForGraphElementForAutoCompletionByLabelUsingSearchParams(
                 label,
                 user,
-                false
+                new HashSet<SearchParam>() {{
+                    add(SearchParam.IS_VERTEX);
+                }}
         );
     }
 
     public JSONArray searchOnlyForOwnVerticesForAutoCompletionByLabel(String label, User user) {
-        return searchForVerticesForAutoCompletionByLabel(
+        return searchForGraphElementForAutoCompletionByLabelUsingSearchParams(
                 label,
                 user,
-                true
+                new HashSet<SearchParam>(){{
+                    add(SearchParam.IS_VERTEX);
+                    add(SearchParam.ONLY_OWN_VERTICES);
+                }}
         );
     }
 
-    private JSONArray searchForVerticesForAutoCompletionByLabel(String label, User user, boolean onlyOwnVertices) {
-        JSONArray vertices = new JSONArray();
+
+
+    public JSONArray searchRelationsForAutoCompletionByLabel(String label, User user) {
+        return searchForGraphElementForAutoCompletionByLabelUsingSearchParams(
+                label,
+                user,
+                new HashSet<SearchParam>()
+        );
+    }
+
+    private JSONArray searchForGraphElementForAutoCompletionByLabelUsingSearchParams(String label, User user, HashSet<SearchParam> searchParams) {
+        JSONArray graphElements = new JSONArray();
         try {
             SolrServer solrServer = searchUtils.getServer();
             SolrQuery solrQuery = new SolrQuery();
             String sentenceMinusLastWord = sentenceMinusLastWord(label);
             String lastWord = lastWordOfSentence(label);
             solrQuery.setQuery(
-                    "label:" + sentenceMinusLastWord + "* AND " +
+                    "(label:" + sentenceMinusLastWord + "*) AND " +
+                            "is_vertex:" + Boolean.toString(searchParams.contains(SearchParam.IS_VERTEX)) + " AND " +
                             "(owner_username:" + user.username() +
-                            (onlyOwnVertices ?
+                            (searchParams.contains(SearchParam.ONLY_OWN_VERTICES) ?
                                     ")" :
                                     " OR " + "is_public:true)")
             );
             solrQuery.addFilterQuery("label:" + sentenceMinusLastWord + "*" + lastWord + "*");
             QueryResponse queryResponse = solrServer.query(solrQuery);
             for (SolrDocument document : queryResponse.getResults()) {
-                vertices.put(SearchJsonConverter.documentToJson(
+                graphElements.put(SearchJsonConverter.documentToJson(
                         document
                 ));
 
@@ -68,8 +90,9 @@ public class GraphSearch {
         } catch (SolrServerException e) {
             throw new RuntimeException(e);
         }
-        return vertices;
+        return graphElements;
     }
+
 
     private String lastWordOfSentence(String sentence) {
         StringTokenizer tokenizer = new StringTokenizer(
