@@ -85,7 +85,7 @@ public class GraphIndexer {
             SolrServer solrServer = searchUtils.getServer();
             solrServer.deleteByQuery(
                     "uri:" + encodeURL(
-                            graphElement.id()
+                            graphElement.uri()
                     )
             );
             solrServer.commit();
@@ -100,7 +100,7 @@ public class GraphIndexer {
 
     private SolrInputDocument graphElementToDocument(GraphElement graphElement, User owner) {
         SolrInputDocument document = new SolrInputDocument();
-        document.addField("uri", encodeURL(graphElement.id()));
+        document.addField("uri", encodeURL(graphElement.uri()));
         document.addField("label", graphElement.label());
         document.addField("owner_username", owner.username());
         return document;

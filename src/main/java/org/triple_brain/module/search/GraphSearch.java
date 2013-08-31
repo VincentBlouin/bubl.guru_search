@@ -72,7 +72,7 @@ public class GraphSearch {
             String sentenceMinusLastWord = sentenceMinusLastWord(label);
             String lastWord = lastWordOfSentence(label);
             solrQuery.setQuery(
-                    "(label:" + sentenceMinusLastWord + "*) AND " +
+                    "label:" + sentenceMinusLastWord + "* AND " +
                             "is_vertex:" + Boolean.toString(searchParams.contains(SearchParam.IS_VERTEX)) + " AND " +
                             "(owner_username:" + user.username() +
                             (searchParams.contains(SearchParam.ONLY_OWN_VERTICES) ?

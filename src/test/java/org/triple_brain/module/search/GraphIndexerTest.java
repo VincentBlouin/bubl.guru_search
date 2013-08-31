@@ -36,7 +36,7 @@ public class GraphIndexerTest extends SearchRelatedTest {
     private SolrDocumentList queryVertex(Vertex vertex)throws Exception{
         return resultsOfSearchQuery(
                 new SolrQuery().setQuery(
-                        "uri:" + encodeURL(vertex.id())
+                        "uri:" + encodeURL(vertex.uri().toString())
                 )
         );
     }

@@ -7,7 +7,7 @@
         <fieldType name="boolean" class="solr.BoolField" sortMissingLast="true"/>
     </types>
     <fields>
-        <field name="uri" type="string" indexed="true" stored="true" required="true" />
+        <field name="uri" type="string" indexed="true" stored="true" required="true"/>
         <field name="is_public" type="boolean" indexed="true" stored="false"/>
         <field name="owner_username" type="string" indexed="true" stored="true" required="true"/>
         <field name="is_vertex" type="boolean" indexed="true" stored="false"/>
