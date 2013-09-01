@@ -21,7 +21,7 @@ public class SearchJsonConverter {
     public static JSONObject documentToJson(SolrDocument document){
         try{
             JSONObject documentAsJson = new JSONObject()
-                    .put(ID, decodeURL((String) document.get("uri")))
+                    .put(URI, decodeURL((String) document.get("uri")))
                     .put(LABEL, document.get("label"))
                     .put(NOTE, document.get("note"))
                     .put(OWNER_USERNAME, document.get("owner_username"));
