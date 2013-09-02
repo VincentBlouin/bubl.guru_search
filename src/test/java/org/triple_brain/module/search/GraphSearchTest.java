@@ -141,7 +141,7 @@ public class GraphSearchTest extends SearchRelatedTest {
         indexGraph();
         GraphSearch graphSearch = GraphSearch.withCoreContainer(coreContainer);
         JSONArray results = graphSearch.searchRelationsForAutoCompletionByLabel(
-                "between vertex",
+                "between vert",
                 user
         );
         assertThat(results.length(), is(2));
