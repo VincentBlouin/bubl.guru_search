@@ -9,7 +9,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 import static org.triple_brain.module.common_utils.Uris.decodeURL;
-import static org.triple_brain.module.model.json.graph.VertexJsonFields.*;
+import static org.triple_brain.module.model.json.graph.VertexJson.*;
 
 /*
 * Copyright Mozilla Public License 1.1
@@ -23,7 +23,7 @@ public class SearchJsonConverter {
             JSONObject documentAsJson = new JSONObject()
                     .put(URI, decodeURL((String) document.get("uri")))
                     .put(LABEL, document.get("label"))
-                    .put(NOTE, document.get("note"))
+                    .put(COMMENT, document.get("comment"))
                     .put(OWNER_USERNAME, document.get("owner_username"));
             documentAsJson.put(
                     RELATIONS_NAME,

@@ -9,7 +9,8 @@ import org.triple_brain.module.search.json.SearchJsonConverter;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
-import static org.triple_brain.module.model.json.graph.VertexJsonFields.LABEL;
+import static org.triple_brain.module.model.json.FriendlyResourceJson.COMMENT;
+import static org.triple_brain.module.model.json.graph.VertexJson.LABEL;
 /*
 * Copyright Mozilla Public License 1.1
 */
@@ -50,15 +51,15 @@ public class GraphSearchTest extends SearchRelatedTest {
 
     @Test
     public void vertex_note_can_be_retrieved_from_search()throws Exception{
-        vertexA.note("A description");
+        vertexA.comment("A description");
         indexGraph();
         GraphSearch graphSearch = GraphSearch.withCoreContainer(coreContainer);
         JSONArray searchResults = graphSearch.searchOnlyForOwnVerticesForAutoCompletionByLabel(
                 vertexA.label(),
                 user
         );
-        String note = searchResults.getJSONObject(0).getString("note");
-        assertThat(note, is("A description"));
+        String comment = searchResults.getJSONObject(0).getString(COMMENT);
+        assertThat(comment, is("A description"));
     }
 
     @Test

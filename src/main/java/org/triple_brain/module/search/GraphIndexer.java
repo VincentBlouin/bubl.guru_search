@@ -53,7 +53,7 @@ public class GraphIndexer {
             SolrInputDocument document = graphElementToDocument(vertex, user);
             document.addField("is_vertex", true);
             document.addField("is_public", vertex.isPublic());
-            document.addField("note", vertex.note());
+            document.addField("comment", vertex.comment());
             for (Edge edge : vertex.connectedEdges()) {
                 document.addField(
                         "relation_name",
