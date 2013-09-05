@@ -4,6 +4,7 @@ import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.common.SolrInputDocument;
 import org.apache.solr.core.CoreContainer;
+import org.triple_brain.module.model.FriendlyResource;
 import org.triple_brain.module.model.User;
 import org.triple_brain.module.model.graph.Edge;
 import org.triple_brain.module.model.graph.GraphElement;
@@ -80,6 +81,17 @@ public class GraphIndexer {
         }
     }
 
+    public void updateGraphElementIndex(GraphElement graphElement, User user){
+        try {
+            SolrInputDocument document = graphElementToDocument(graphElement, user);
+            SolrServer solrServer = searchUtils.getServer();
+            solrServer.add(document);
+            solrServer.commit();
+        } catch (IOException | SolrServerException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public void deleteGraphElementOfUser(GraphElement graphElement, User user) {
         try {
             SolrServer solrServer = searchUtils.getServer();
@@ -103,6 +115,12 @@ public class GraphIndexer {
         document.addField("uri", encodeURL(graphElement.uri()));
         document.addField("label", graphElement.label());
         document.addField("owner_username", owner.username());
+        for(FriendlyResource identification : graphElement.getIdentifications()){
+            document.addField(
+                    "identification",
+                    encodeURL(identification.uri())
+            );
+        }
         return document;
     }
 }

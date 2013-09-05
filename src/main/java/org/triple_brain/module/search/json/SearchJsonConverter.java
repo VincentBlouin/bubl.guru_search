@@ -7,6 +7,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.triple_brain.module.common_utils.Uris.decodeURL;
 import static org.triple_brain.module.model.json.graph.VertexJson.*;
@@ -16,6 +17,7 @@ import static org.triple_brain.module.model.json.graph.VertexJson.*;
 */
 public class SearchJsonConverter {
     public static String RELATIONS_NAME = "relations_name";
+    public static String IDENTIFICATIONS = "identifications";
     public static String OWNER_USERNAME = "owner_username";
 
     public static JSONObject documentToJson(SolrDocument document){
@@ -29,6 +31,10 @@ public class SearchJsonConverter {
                     RELATIONS_NAME,
                     buildRelationsName(document)
             );
+            documentAsJson.put(
+                    IDENTIFICATIONS,
+                    buildIdentifications(document)
+            );
             return documentAsJson;
         }catch(UnsupportedEncodingException | JSONException e){
             throw new RuntimeException(e);
@@ -39,5 +45,24 @@ public class SearchJsonConverter {
         return new JSONArray(
                 (ArrayList<String>) document.get("relation_name")
         );
+    }
+    private static JSONArray buildIdentifications(SolrDocument document){
+        JSONArray identificationsAsJson = new JSONArray();
+        if(!document.containsKey("identification")){
+            return identificationsAsJson;
+        }
+        List<String> identifications = (ArrayList<String>) document.get(
+                "identification"
+        );
+        for(String identification : identifications){
+            try{
+                identificationsAsJson.put(
+                        decodeURL(identification)
+                );
+            }catch(UnsupportedEncodingException e){
+                throw new RuntimeException(e);
+            }
+        }
+        return identificationsAsJson;
     }
 }
