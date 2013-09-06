@@ -3,6 +3,8 @@ package org.triple_brain.module.search;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
+import org.codehaus.jettison.json.JSONArray;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.triple_brain.module.model.graph.Vertex;
 
@@ -26,6 +28,29 @@ public class GraphIndexerTest extends SearchRelatedTest {
         assertThat(
                 labelOfGraphElementSearchResult(documentList.get(0)),
                 is("vertex Azure")
+        );
+    }
+
+    @Test
+    @Ignore("todo when lucene4 be integrated in noe4j for now it conflicts with solr when I upgrade solr to version 4")
+    public void indexing_graph_element_doesnt_erase_vertex_specific_fields(){
+        indexGraph();
+        GraphSearch graphSearch = GraphSearch.withCoreContainer(coreContainer);
+        JSONArray vertexASearchResults = graphSearch.searchOnlyForOwnVerticesForAutoCompletionByLabel(
+                "vertex Azure",
+                user
+        );
+        assertThat(
+                vertexASearchResults.length(), is(1)
+        );
+        //todo uncomment when lucene4 be integrated in noe4j for now it conflicts with solr when I upgrade solr to version 4
+//        graphIndexer().updateGraphElementIndex(vertexA, user);
+        vertexASearchResults = graphSearch.searchOnlyForOwnVerticesForAutoCompletionByLabel(
+                "vertex Azure",
+                user
+        );
+        assertThat(
+                vertexASearchResults.length(), is(1)
         );
     }
 

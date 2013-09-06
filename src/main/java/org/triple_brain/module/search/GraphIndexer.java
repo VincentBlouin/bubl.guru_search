@@ -81,17 +81,6 @@ public class GraphIndexer {
         }
     }
 
-    public void updateGraphElementIndex(GraphElement graphElement, User user){
-        try {
-            SolrInputDocument document = graphElementToDocument(graphElement, user);
-            SolrServer solrServer = searchUtils.getServer();
-            solrServer.add(document);
-            solrServer.commit();
-        } catch (IOException | SolrServerException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public void deleteGraphElementOfUser(GraphElement graphElement, User user) {
         try {
             SolrServer solrServer = searchUtils.getServer();
