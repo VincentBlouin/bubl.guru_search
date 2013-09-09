@@ -22,7 +22,7 @@ public class GraphIndexerTest extends SearchRelatedTest {
     public void can_index_vertex()throws Exception{
         SolrDocumentList documentList = queryVertex(vertexA);
         assertThat(documentList.size(), is(0));
-        graphIndexer().indexVertexOfUser(vertexA, user);
+        graphIndexer().indexVertex(vertexA);
         documentList = queryVertex(vertexA);
         assertThat(documentList.size(), is(1));
         assertThat(

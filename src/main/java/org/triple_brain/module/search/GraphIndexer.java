@@ -1,16 +1,20 @@
 package org.triple_brain.module.search;
 
+import com.google.inject.Inject;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.common.SolrInputDocument;
 import org.apache.solr.core.CoreContainer;
 import org.triple_brain.module.model.FriendlyResource;
 import org.triple_brain.module.model.User;
+import org.triple_brain.module.model.WholeGraph;
 import org.triple_brain.module.model.graph.Edge;
 import org.triple_brain.module.model.graph.GraphElement;
+import org.triple_brain.module.model.graph.SubGraph;
 import org.triple_brain.module.model.graph.Vertex;
 
 import java.io.IOException;
+import java.util.Iterator;
 
 import static org.triple_brain.module.common_utils.Uris.encodeURL;
 
@@ -19,6 +23,9 @@ import static org.triple_brain.module.common_utils.Uris.encodeURL;
 */
 
 public class GraphIndexer {
+
+    @Inject
+    WholeGraph wholeGraph;
 
     private CoreContainer coreContainer;
     private SearchUtils searchUtils;
@@ -42,16 +49,20 @@ public class GraphIndexer {
                 coreContainer.getCore(coreContainer.getDefaultCoreName()).getCoreDescriptor().getSchemaName();
     }
 
-    public void indexVertex(Vertex vertex) {
-        indexVertexOfUser(
-                vertex,
-                vertex.owner()
-        );
+    public void indexWholeGraph(){
+        Iterator<Vertex> vertexIt = wholeGraph.getAllVertices();
+        while(vertexIt.hasNext()){
+            Vertex vertex = vertexIt.next();
+            indexVertex(vertex);
+            for(Edge edge : vertex.connectedEdges()){
+                indexRelation(edge);
+            }
+        }
     }
 
-    public void indexVertexOfUser(Vertex vertex, User user) {
+    public void indexVertex(Vertex vertex) {
         try {
-            SolrInputDocument document = graphElementToDocument(vertex, user);
+            SolrInputDocument document = graphElementToDocument(vertex);
             document.addField("is_vertex", true);
             document.addField("is_public", vertex.isPublic());
             document.addField("comment", vertex.comment());
@@ -69,9 +80,9 @@ public class GraphIndexer {
         }
     }
 
-    public void indexRelationOfUser(Edge edge, User user) {
+    public void indexRelation(Edge edge) {
         try {
-            SolrInputDocument document = graphElementToDocument(edge, user);
+            SolrInputDocument document = graphElementToDocument(edge);
             document.addField("is_vertex", false);
             SolrServer solrServer = searchUtils.getServer();
             solrServer.add(document);
@@ -99,12 +110,16 @@ public class GraphIndexer {
         coreContainer.shutdown();
     }
 
-    private SolrInputDocument graphElementToDocument(GraphElement graphElement, User owner) {
+    public void indexGraph(SubGraph subGraph){
+
+    }
+
+    private SolrInputDocument graphElementToDocument(GraphElement graphElement) {
         SolrInputDocument document = new SolrInputDocument();
         document.addField("uri", encodeURL(graphElement.uri()));
         document.addField("label", graphElement.label());
         document.addField("label_lower_case", graphElement.label().toLowerCase());
-        document.addField("owner_username", owner.username());
+        document.addField("owner_username", graphElement.ownerUsername());
         for(FriendlyResource identification : graphElement.getIdentifications()){
             document.addField(
                     "identification",
