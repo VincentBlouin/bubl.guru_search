@@ -69,17 +69,18 @@ public class GraphSearch {
         try {
             SolrServer solrServer = searchUtils.getServer();
             SolrQuery solrQuery = new SolrQuery();
+            label = label.toLowerCase();
             String sentenceMinusLastWord = sentenceMinusLastWord(label);
             String lastWord = lastWordOfSentence(label);
             solrQuery.setQuery(
-                    "label:" + sentenceMinusLastWord + "* AND " +
+                    "label_lower_case:" + sentenceMinusLastWord + "* AND " +
                             "is_vertex:" + Boolean.toString(searchParams.contains(SearchParam.IS_VERTEX)) + " AND " +
                             "(owner_username:" + user.username() +
                             (searchParams.contains(SearchParam.ONLY_OWN_VERTICES) ?
                                     ")" :
                                     " OR " + "is_public:true)")
             );
-            solrQuery.addFilterQuery("label:" + sentenceMinusLastWord + "*" + lastWord + "*");
+            solrQuery.addFilterQuery("label_lower_case:" + sentenceMinusLastWord + "*" + lastWord + "*");
             QueryResponse queryResponse = solrServer.query(solrQuery);
             for (SolrDocument document : queryResponse.getResults()) {
                 graphElements.put(SearchJsonConverter.documentToJson(

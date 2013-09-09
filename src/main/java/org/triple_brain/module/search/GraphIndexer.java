@@ -103,6 +103,7 @@ public class GraphIndexer {
         SolrInputDocument document = new SolrInputDocument();
         document.addField("uri", encodeURL(graphElement.uri()));
         document.addField("label", graphElement.label());
+        document.addField("label_lower_case", graphElement.label().toLowerCase());
         document.addField("owner_username", owner.username());
         for(FriendlyResource identification : graphElement.getIdentifications()){
             document.addField(

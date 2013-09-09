@@ -5,6 +5,7 @@ import org.codehaus.jettison.json.JSONObject;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.triple_brain.module.common_utils.JsonUtils;
+import org.triple_brain.module.model.json.graph.VertexJson;
 import org.triple_brain.module.search.json.SearchJsonConverter;
 
 import static org.hamcrest.core.Is.is;
@@ -135,6 +136,40 @@ public class GraphSearchTest extends SearchRelatedTest {
                 user2
         );
         assertFalse(vertices.length() > 0);
+    }
+
+    @Test
+    public void search_is_case_insensitive(){
+        indexGraph();
+        GraphSearch graphSearch = GraphSearch.withCoreContainer(coreContainer);
+        JSONArray vertices = graphSearch.searchOwnVerticesAndPublicOnesForAutoCompletionByLabel(
+                "vert",
+                user
+        );
+        assertTrue(vertices.length() > 0);
+        vertices = graphSearch.searchOwnVerticesAndPublicOnesForAutoCompletionByLabel(
+                "Vert",
+                user
+        );
+        assertTrue(vertices.length() > 0);
+    }
+
+    @Test
+    public void case_is_preserved_when_getting_label(){
+        vertexA.label("Vertex Azure");
+        indexGraph();
+        GraphSearch graphSearch = GraphSearch.withCoreContainer(coreContainer);
+        JSONArray vertices = graphSearch.searchOwnVerticesAndPublicOnesForAutoCompletionByLabel(
+                "vertex azure",
+                user
+        );
+        JSONObject vertexAAsJson = vertices.optJSONObject(0);
+        assertThat(
+                vertexAAsJson.optString(
+                        VertexJson.LABEL
+                ),
+                is("Vertex Azure")
+        );
     }
 
     @Test
