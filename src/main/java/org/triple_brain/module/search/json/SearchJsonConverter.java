@@ -28,10 +28,20 @@ public class SearchJsonConverter {
                     .put(URI, decodeURL((String) document.get("uri")))
                     .put(LABEL, document.get("label"))
                     .put(COMMENT, document.get("comment"))
-                    .put(OWNER_USERNAME, document.get("owner_username"))
-                    .put(SOURCE_VERTEX_URI, decodeURL((String)document.get("source_vertex_uri")))
-                    .put(DESTINATION_VERTEX_URI, decodeURL((String)document.get("destination_vertex_uri")));
-
+                    .put(OWNER_USERNAME, document.get("owner_username"));
+            if(document.containsKey("source_vertex_uri")){
+                documentAsJson.put(
+                        SOURCE_VERTEX_URI,
+                        decodeURL(
+                                (String)document.get("source_vertex_uri")
+                        )
+                ).put(
+                        DESTINATION_VERTEX_URI,
+                        decodeURL(
+                                (String)document.get("destination_vertex_uri")
+                        )
+                );
+            }
             documentAsJson.put(
                     RELATIONS_NAME,
                     buildRelationsName(document)
