@@ -32,6 +32,23 @@ public class GraphIndexerTest extends SearchRelatedTest {
     }
 
     @Test
+    public void can_remove_graph_element_from_index(){
+        indexGraph();
+        GraphSearch graphSearch = GraphSearch.withCoreContainer(coreContainer);
+        JSONArray results = graphSearch.searchOwnVerticesAndPublicOnesForAutoCompletionByLabel(
+                "vertex azure",
+                user
+        );
+        assertThat(results.length(), is(1));
+        graphIndexer().deleteGraphElementOfUser(vertexA, user);
+        results = graphSearch.searchOwnVerticesAndPublicOnesForAutoCompletionByLabel(
+                "vertex azure",
+                user
+        );
+        assertThat(results.length(), is(0));
+    }
+
+    @Test
     @Ignore("todo when lucene4 be integrated in noe4j for now it conflicts with solr when I upgrade solr to version 4")
     public void indexing_graph_element_doesnt_erase_vertex_specific_fields(){
         indexGraph();
