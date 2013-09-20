@@ -84,6 +84,14 @@ public class GraphIndexer {
         try {
             SolrInputDocument document = graphElementToDocument(edge);
             document.addField("is_vertex", false);
+            document.addField(
+                    "source_vertex_uri",
+                    encodeURL(edge.sourceVertex().uri())
+            );
+            document.addField(
+                    "destination_vertex_uri",
+                    encodeURL(edge.destinationVertex().uri())
+            );
             SolrServer solrServer = searchUtils.getServer();
             solrServer.add(document);
             solrServer.commit();

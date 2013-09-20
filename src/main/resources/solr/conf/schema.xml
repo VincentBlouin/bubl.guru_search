@@ -16,5 +16,7 @@
         <field name="comment" type="string" indexed="false" stored="true"/>
         <field name="relation_name" multiValued="true" type="string" indexed="false" stored="true"/>
         <field name="identification" multiValued="true" type="string" indexed="false" stored="true"/>
+        <field name="source_vertex_uri" type="string" indexed="false" stored="true"/>
+        <field name="destination_vertex_uri" type="string" indexed="false" stored="true"/>
     </fields>
 </schema>

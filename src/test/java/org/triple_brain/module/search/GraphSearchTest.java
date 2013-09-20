@@ -173,7 +173,23 @@ public class GraphSearchTest extends SearchRelatedTest {
     }
 
     @Test
-    @Ignore("I dont know why sometimes it works, sometimes it dont. Unignore when using Suggestion from solr for autocompletion")
+    public void relation_source_and_destination_vertex_uri_are_included_in_result(){
+        indexGraph();
+        GraphSearch graphSearch = GraphSearch.withCoreContainer(coreContainer);
+        JSONArray relations = graphSearch.searchRelationsForAutoCompletionByLabel(
+                "between vert",
+                user
+        );
+        JSONObject relation = relations.optJSONObject(0);
+        assertTrue(relation.has("source_vertex_uri"));
+        assertTrue(relation.has("destination_vertex_uri"));
+    }
+
+    @Test
+    @Ignore(
+            "I dont know why sometimes it works, sometimes it dont. " +
+            "Unignore when using Suggestion from solr for autocompletion"
+    )
     public void can_search_relations(){
         indexGraph();
         GraphSearch graphSearch = GraphSearch.withCoreContainer(coreContainer);

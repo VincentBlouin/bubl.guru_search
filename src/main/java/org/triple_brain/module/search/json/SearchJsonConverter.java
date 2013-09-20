@@ -19,6 +19,8 @@ public class SearchJsonConverter {
     public static String RELATIONS_NAME = "relations_name";
     public static String IDENTIFICATIONS = "identifications";
     public static String OWNER_USERNAME = "owner_username";
+    public static String SOURCE_VERTEX_URI = "source_vertex_uri";
+    public static String DESTINATION_VERTEX_URI = "destination_vertex_uri";
 
     public static JSONObject documentToJson(SolrDocument document){
         try{
@@ -26,7 +28,10 @@ public class SearchJsonConverter {
                     .put(URI, decodeURL((String) document.get("uri")))
                     .put(LABEL, document.get("label"))
                     .put(COMMENT, document.get("comment"))
-                    .put(OWNER_USERNAME, document.get("owner_username"));
+                    .put(OWNER_USERNAME, document.get("owner_username"))
+                    .put(SOURCE_VERTEX_URI, document.get("source_vertex_uri"))
+                    .put(DESTINATION_VERTEX_URI, document.get("destination_vertex_uri"));
+
             documentAsJson.put(
                     RELATIONS_NAME,
                     buildRelationsName(document)
