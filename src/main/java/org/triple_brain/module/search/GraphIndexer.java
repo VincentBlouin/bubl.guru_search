@@ -6,11 +6,9 @@ import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.common.SolrInputDocument;
 import org.apache.solr.core.CoreContainer;
 import org.triple_brain.module.model.FriendlyResource;
-import org.triple_brain.module.model.User;
 import org.triple_brain.module.model.WholeGraph;
 import org.triple_brain.module.model.graph.Edge;
 import org.triple_brain.module.model.graph.GraphElement;
-import org.triple_brain.module.model.graph.SubGraph;
 import org.triple_brain.module.model.graph.Vertex;
 
 import java.io.IOException;
@@ -50,7 +48,6 @@ public class GraphIndexer {
     }
 
     public void indexWholeGraph(){
-        indexAllVertices();
         indexAllEdges();
     }
 
@@ -94,7 +91,7 @@ public class GraphIndexer {
         }
     }
 
-    public void deleteGraphElementOfUser(GraphElement graphElement, User user) {
+    public void deleteGraphElement(GraphElement graphElement) {
         try {
             SolrServer solrServer = searchUtils.getServer();
             solrServer.deleteByQuery(
@@ -110,10 +107,6 @@ public class GraphIndexer {
 
     public void close() {
         coreContainer.shutdown();
-    }
-
-    public void indexGraph(SubGraph subGraph){
-
     }
 
     private void indexAllVertices(){

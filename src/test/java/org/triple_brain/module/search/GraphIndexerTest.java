@@ -41,7 +41,7 @@ public class GraphIndexerTest extends SearchRelatedTest {
                 user
         );
         assertThat(results.length(), is(1));
-        graphIndexer.deleteGraphElementOfUser(vertexA, user);
+        graphIndexer.deleteGraphElement(vertexA);
         results = graphSearch.searchOwnVerticesAndPublicOnesForAutoCompletionByLabel(
                 "vertex azure",
                 user
