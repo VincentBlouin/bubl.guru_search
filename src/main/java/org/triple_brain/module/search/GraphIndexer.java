@@ -50,14 +50,8 @@ public class GraphIndexer {
     }
 
     public void indexWholeGraph(){
-        Iterator<Vertex> vertexIt = wholeGraph.getAllVertices();
-        while(vertexIt.hasNext()){
-            Vertex vertex = vertexIt.next();
-            indexVertex(vertex);
-            for(Edge edge : vertex.connectedEdges()){
-                indexRelation(edge);
-            }
-        }
+        indexAllVertices();
+        indexAllEdges();
     }
 
     public void indexVertex(Vertex vertex) {
@@ -120,6 +114,24 @@ public class GraphIndexer {
 
     public void indexGraph(SubGraph subGraph){
 
+    }
+
+    private void indexAllVertices(){
+        Iterator<Vertex> vertexIt = wholeGraph.getAllVertices();
+        while(vertexIt.hasNext()){
+            indexVertex(
+                    vertexIt.next()
+            );
+        }
+    }
+
+    private void indexAllEdges(){
+        Iterator<Edge> edgeIt = wholeGraph.getAllEdges();
+        while(edgeIt.hasNext()){
+            indexRelation(
+                    edgeIt.next()
+            );
+        }
     }
 
     private SolrInputDocument graphElementToDocument(GraphElement graphElement) {

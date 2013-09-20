@@ -10,6 +10,7 @@ import org.triple_brain.module.model.graph.Vertex;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.triple_brain.module.common_utils.Uris.encodeURL;
 
 /*
@@ -22,7 +23,7 @@ public class GraphIndexerTest extends SearchRelatedTest {
     public void can_index_vertex()throws Exception{
         SolrDocumentList documentList = queryVertex(vertexA);
         assertThat(documentList.size(), is(0));
-        graphIndexer().indexVertex(vertexA);
+        graphIndexer.indexVertex(vertexA);
         documentList = queryVertex(vertexA);
         assertThat(documentList.size(), is(1));
         assertThat(
@@ -40,7 +41,7 @@ public class GraphIndexerTest extends SearchRelatedTest {
                 user
         );
         assertThat(results.length(), is(1));
-        graphIndexer().deleteGraphElementOfUser(vertexA, user);
+        graphIndexer.deleteGraphElementOfUser(vertexA, user);
         results = graphSearch.searchOwnVerticesAndPublicOnesForAutoCompletionByLabel(
                 "vertex azure",
                 user
@@ -49,7 +50,17 @@ public class GraphIndexerTest extends SearchRelatedTest {
     }
 
     @Test
-    @Ignore("todo when lucene4 be integrated in noe4j for now it conflicts with solr when I upgrade solr to version 4")
+    public void edges_get_indexed_when_indexing_whole_graph(){
+        graphIndexer.indexWholeGraph();
+        assertTrue(true);
+    }
+
+    @Test
+    @Ignore(
+            "todo when lucene4 be integrated in noe4j " +
+                    "for now it conflicts with solr " +
+                    "when I upgrade solr to version 4"
+    )
     public void indexing_graph_element_doesnt_erase_vertex_specific_fields(){
         indexGraph();
         GraphSearch graphSearch = GraphSearch.withCoreContainer(coreContainer);

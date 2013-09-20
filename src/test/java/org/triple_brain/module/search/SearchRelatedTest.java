@@ -25,6 +25,8 @@ public class SearchRelatedTest extends AdaptableGraphComponentTest{
     @Inject
     GraphFactory graphMaker;
 
+    GraphIndexer graphIndexer;
+
     @Inject
     protected TestScenarios testScenarios;
 
@@ -53,6 +55,8 @@ public class SearchRelatedTest extends AdaptableGraphComponentTest{
 
     @Before
     public void beforeSearchRelatedTest() throws Exception{
+        graphIndexer = GraphIndexer.withCoreContainer(coreContainer);
+        injector.injectMembers(graphIndexer);
         searchUtils = SearchUtils.usingCoreCoreContainer(coreContainer);
         user = User.withUsernameEmailAndLocales(
                 "test2",
@@ -102,10 +106,6 @@ public class SearchRelatedTest extends AdaptableGraphComponentTest{
 
     protected SolrServer solrServer(){
         return searchUtils.getServer();
-    }
-
-    protected GraphIndexer graphIndexer(){
-        return GraphIndexer.withCoreContainer(coreContainer);
     }
 
     protected void indexGraph(){
