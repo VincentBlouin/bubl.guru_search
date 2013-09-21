@@ -128,15 +128,19 @@ public class GraphIndexer {
             nbInCycle++;
             if(nbInCycle == INDEX_AFTER_HOW_NB_DOCUMENTS){
                 totalIndexed += INDEX_AFTER_HOW_NB_DOCUMENTS;
-                System.out.println(
-                        "Indexing vertices ... total indexed " + totalIndexed
-                );
                 addDocumentsAndCommit(vertexDocuments);
+                System.out.println(
+                        "Indexing vertices ... total indexed yet " + totalIndexed
+                );
                 nbInCycle = 0;
                 vertexDocuments = new HashSet<>();
             }
         }
         addDocumentsAndCommit(vertexDocuments);
+        totalIndexed += nbInCycle;
+        System.out.println(
+                "Indexing vertices ... total indexed " + totalIndexed
+        );
     }
 
     private void indexAllEdges(){
@@ -151,15 +155,19 @@ public class GraphIndexer {
             nbInCycle++;
             if(nbInCycle == INDEX_AFTER_HOW_NB_DOCUMENTS){
                 totalIndexed += INDEX_AFTER_HOW_NB_DOCUMENTS;
-                System.out.println(
-                        "Indexing edges ... total indexed " + totalIndexed
-                );
                 addDocumentsAndCommit(edgesDocument);
+                System.out.println(
+                        "Indexing edges ... total indexed yet " + totalIndexed
+                );
                 nbInCycle = 0;
                 edgesDocument = new HashSet<>();
             }
         }
         addDocumentsAndCommit(edgesDocument);
+        totalIndexed += nbInCycle;
+        System.out.println(
+                "Indexing edges ... total indexed " + totalIndexed
+        );
     }
 
     private void addDocumentsAndCommit(Collection<SolrInputDocument> collection){
