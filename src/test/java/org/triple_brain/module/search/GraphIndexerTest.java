@@ -4,11 +4,17 @@ import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
 import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.triple_brain.module.common_utils.JsonUtils;
+import org.triple_brain.module.model.graph.Edge;
 import org.triple_brain.module.model.graph.Vertex;
+import org.triple_brain.module.search.json.SearchJsonConverter;
 
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.triple_brain.module.common_utils.Uris.encodeURL;
@@ -20,7 +26,7 @@ import static org.triple_brain.module.common_utils.Uris.encodeURL;
 public class GraphIndexerTest extends SearchRelatedTest {
 
     @Test
-    public void can_index_vertex()throws Exception{
+    public void can_index_vertex() throws Exception {
         SolrDocumentList documentList = queryVertex(vertexA);
         assertThat(documentList.size(), is(0));
         graphIndexer.indexVertex(vertexA);
@@ -33,7 +39,7 @@ public class GraphIndexerTest extends SearchRelatedTest {
     }
 
     @Test
-    public void can_remove_graph_element_from_index(){
+    public void can_remove_graph_element_from_index() {
         indexGraph();
         GraphSearch graphSearch = GraphSearch.withCoreContainer(coreContainer);
         JSONArray results = graphSearch.searchOwnVerticesAndPublicOnesForAutoCompletionByLabel(
@@ -50,9 +56,27 @@ public class GraphIndexerTest extends SearchRelatedTest {
     }
 
     @Test
-    public void edges_get_indexed_when_indexing_whole_graph(){
-        graphIndexer.indexWholeGraph();
-        assertTrue(true);
+    public void updating_edge_label_updates_connected_vertices_relations_name() throws Exception {
+        indexGraph();
+        assertFalse(JsonUtils.containsString(
+                relationsNameOfVertex(vertexA),
+                "updated label"
+        ));
+        assertFalse(JsonUtils.containsString(
+                relationsNameOfVertex(vertexB),
+                "updated label"
+        ));
+        Edge edge = vertexA.connectedEdges().iterator().next();
+        edge.label("updated label");
+        graphIndexer.handleEdgeLabelUpdated(edge);
+        assertTrue(JsonUtils.containsString(
+                relationsNameOfVertex(vertexA),
+                "updated label"
+        ));
+        assertTrue(JsonUtils.containsString(
+                relationsNameOfVertex(vertexB),
+                "updated label"
+        ));
     }
 
     @Test
@@ -61,7 +85,7 @@ public class GraphIndexerTest extends SearchRelatedTest {
                     "for now it conflicts with solr " +
                     "when I upgrade solr to version 4"
     )
-    public void indexing_graph_element_doesnt_erase_vertex_specific_fields(){
+    public void indexing_graph_element_doesnt_erase_vertex_specific_fields() {
         indexGraph();
         GraphSearch graphSearch = GraphSearch.withCoreContainer(coreContainer);
         JSONArray vertexASearchResults = graphSearch.searchOnlyForOwnVerticesForAutoCompletionByLabel(
@@ -82,15 +106,32 @@ public class GraphIndexerTest extends SearchRelatedTest {
         );
     }
 
-    private String labelOfGraphElementSearchResult(SolrDocument solrDocument){
+    private String labelOfGraphElementSearchResult(SolrDocument solrDocument) {
         return (String) solrDocument.getFieldValue("label");
     }
 
-    private SolrDocumentList queryVertex(Vertex vertex)throws Exception{
+    private SolrDocumentList queryVertex(Vertex vertex) throws Exception {
         return resultsOfSearchQuery(
                 new SolrQuery().setQuery(
                         "uri:" + encodeURL(vertex.uri().toString())
                 )
         );
     }
+
+    private JSONArray relationsNameOfVertex(Vertex vertex) {
+        JSONArray searchResults = graphSearch.searchOnlyForOwnVerticesForAutoCompletionByLabel(
+                vertex.label(),
+                user
+        );
+        try {
+            JSONObject result = searchResults.getJSONObject(0);
+            return result.getJSONArray(
+                    SearchJsonConverter.RELATIONS_NAME
+            );
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
 }

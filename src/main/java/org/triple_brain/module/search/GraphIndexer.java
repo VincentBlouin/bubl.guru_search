@@ -41,7 +41,7 @@ public class GraphIndexer {
         this.searchUtils = SearchUtils.usingCoreCoreContainer(coreContainer);
     }
 
-    public void indexWholeGraph(){
+    public void indexWholeGraph() {
         indexAllVertices();
         indexAllEdges();
     }
@@ -84,11 +84,33 @@ public class GraphIndexer {
         }
     }
 
+    public void handleEdgeLabelUpdated(Edge edge) {
+        Set<SolrInputDocument> updatedDocuments = new HashSet<>();
+        updatedDocuments.add(
+                vertexDocument(
+                        edge.sourceVertex()
+                )
+        );
+        updatedDocuments.add(
+                vertexDocument(
+                        edge.destinationVertex()
+                )
+        );
+        updatedDocuments.add(
+                edgeDocument(
+                        edge
+                )
+        );
+        addDocumentsAndCommit(
+                updatedDocuments
+        );
+    }
+
     public void close() {
         coreContainer.shutdown();
     }
 
-    private SolrInputDocument edgeDocument(Edge edge){
+    private SolrInputDocument edgeDocument(Edge edge) {
         SolrInputDocument document = graphElementToDocument(edge);
         document.addField("is_vertex", false);
         document.addField(
@@ -102,7 +124,7 @@ public class GraphIndexer {
         return document;
     }
 
-    private SolrInputDocument vertexDocument(Vertex vertex){
+    private SolrInputDocument vertexDocument(Vertex vertex) {
         SolrInputDocument document = graphElementToDocument(vertex);
         document.addField("is_vertex", true);
         document.addField("is_public", vertex.isPublic());
@@ -116,17 +138,17 @@ public class GraphIndexer {
         return document;
     }
 
-    private void indexAllVertices(){
+    private void indexAllVertices() {
         Iterator<Vertex> vertexIt = wholeGraph.getAllVertices();
         Set<SolrInputDocument> vertexDocuments = new HashSet<>();
         int totalIndexed = 0;
         int nbInCycle = 0;
-        while(vertexIt.hasNext()){
+        while (vertexIt.hasNext()) {
             vertexDocuments.add(
                     vertexDocument(vertexIt.next())
             );
             nbInCycle++;
-            if(nbInCycle == INDEX_AFTER_HOW_NB_DOCUMENTS){
+            if (nbInCycle == INDEX_AFTER_HOW_NB_DOCUMENTS) {
                 totalIndexed += INDEX_AFTER_HOW_NB_DOCUMENTS;
                 addDocumentsAndCommit(vertexDocuments);
                 System.out.println(
@@ -143,17 +165,17 @@ public class GraphIndexer {
         );
     }
 
-    private void indexAllEdges(){
+    private void indexAllEdges() {
         Iterator<Edge> edgeIt = wholeGraph.getAllEdges();
         Set<SolrInputDocument> edgesDocument = new HashSet<>();
         int totalIndexed = 0;
         int nbInCycle = 0;
-        while(edgeIt.hasNext()){
+        while (edgeIt.hasNext()) {
             edgesDocument.add(
-                edgeDocument(edgeIt.next())
+                    edgeDocument(edgeIt.next())
             );
             nbInCycle++;
-            if(nbInCycle == INDEX_AFTER_HOW_NB_DOCUMENTS){
+            if (nbInCycle == INDEX_AFTER_HOW_NB_DOCUMENTS) {
                 totalIndexed += INDEX_AFTER_HOW_NB_DOCUMENTS;
                 addDocumentsAndCommit(edgesDocument);
                 System.out.println(
@@ -170,22 +192,23 @@ public class GraphIndexer {
         );
     }
 
-    private void addDocumentsAndCommit(Collection<SolrInputDocument> collection){
-        try{
+    private void addDocumentsAndCommit(Collection<SolrInputDocument> collection) {
+        try {
             SolrServer solrServer = searchUtils.getServer();
             solrServer.add(collection);
             solrServer.commit();
-        }catch(SolrServerException | IOException e){
+        } catch (SolrServerException | IOException e) {
             throw new RuntimeException(e);
         }
     }
+
     private SolrInputDocument graphElementToDocument(GraphElement graphElement) {
         SolrInputDocument document = new SolrInputDocument();
         document.addField("uri", encodeURL(graphElement.uri()));
         document.addField("label", graphElement.label());
         document.addField("label_lower_case", graphElement.label().toLowerCase());
         document.addField("owner_username", graphElement.ownerUsername());
-        for(FriendlyResource identification : graphElement.getIdentifications()){
+        for (FriendlyResource identification : graphElement.getIdentifications()) {
             document.addField(
                     "identification",
                     encodeURL(identification.uri())

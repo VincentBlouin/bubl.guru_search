@@ -27,6 +27,8 @@ public class SearchRelatedTest extends AdaptableGraphComponentTest{
 
     GraphIndexer graphIndexer;
 
+    GraphSearch graphSearch;
+
     @Inject
     protected TestScenarios testScenarios;
 
@@ -56,6 +58,7 @@ public class SearchRelatedTest extends AdaptableGraphComponentTest{
     @Before
     public void beforeSearchRelatedTest() throws Exception{
         graphIndexer = GraphIndexer.withCoreContainer(coreContainer);
+        graphSearch = GraphSearch.withCoreContainer(coreContainer);
         injector.injectMembers(graphIndexer);
         searchUtils = SearchUtils.usingCoreCoreContainer(coreContainer);
         user = User.withUsernameEmailAndLocales(
@@ -109,7 +112,6 @@ public class SearchRelatedTest extends AdaptableGraphComponentTest{
     }
 
     protected void indexGraph(){
-        GraphIndexer graphIndexer = GraphIndexer.withCoreContainer(coreContainer);
         graphIndexer.indexVertex(vertexA);
         graphIndexer.indexVertex(vertexB);
         graphIndexer.indexVertex(vertexC);
