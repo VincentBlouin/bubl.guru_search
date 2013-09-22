@@ -14,4 +14,5 @@ public interface GraphIndexer {
     public void indexRelation(Edge edge);
     public void deleteGraphElement(GraphElement graphElement);
     public void handleEdgeLabelUpdated(Edge edge);
+    public void commit();
 }
