@@ -1,25 +1,24 @@
 package org.triple_brain.module.search;
 
-import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONObject;
 import org.triple_brain.module.model.User;
 
 import java.net.URI;
+import java.util.List;
 
 /*
 * Copyright Mozilla Public License 1.1
 */
 public interface GraphSearch {
-    public JSONArray searchOwnVerticesAndPublicOnesForAutoCompletionByLabel(
+    public List<VertexSearchResult> searchOwnVerticesAndPublicOnesForAutoCompletionByLabel(
             String label,
             User user
     );
-    public JSONArray searchOnlyForOwnVerticesForAutoCompletionByLabel(
+    public List<VertexSearchResult> searchOnlyForOwnVerticesForAutoCompletionByLabel(
             String label, User user
     );
-    public JSONArray searchRelationsForAutoCompletionByLabel(
+    public List<EdgeSearchResult> searchRelationsForAutoCompletionByLabel(
             String label,
             User user
     );
-    public JSONObject getByUri(URI uri, User user);
+    public GraphElementSearchResult getByUri(URI uri, User user);
 }
