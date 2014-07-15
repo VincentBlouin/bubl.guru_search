@@ -13,6 +13,7 @@ public interface GraphSearch {
             String label,
             User user
     );
+
     public List<VertexSearchResult> searchOnlyForOwnVerticesForAutoCompletionByLabel(
             String label, User user
     );
