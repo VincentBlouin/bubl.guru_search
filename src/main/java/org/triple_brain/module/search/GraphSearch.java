@@ -1,3 +1,7 @@
+/*
+ * Copyright Vincent Blouin under the Mozilla Public License 1.1
+ */
+
 package org.triple_brain.module.search;
 
 import org.triple_brain.module.model.User;
@@ -5,11 +9,8 @@ import org.triple_brain.module.model.User;
 import java.net.URI;
 import java.util.List;
 
-/*
-* Copyright Mozilla Public License 1.1
-*/
 public interface GraphSearch {
-    public List<VertexSearchResult> searchOwnVerticesAndPublicOnesForAutoCompletionByLabel(
+    public List<VertexSearchResult> searchSchemasOwnVerticesAndPublicOnesForAutoCompletionByLabel(
             String label,
             User user
     );
