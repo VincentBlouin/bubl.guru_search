@@ -46,6 +46,6 @@ public class VertexSearchResult implements GraphElementSearchResult{
     }
 
     public Boolean hasProperties(){
-        return null != properties;
+        return null != properties && !properties.isEmpty();
     }
 }
