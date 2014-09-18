@@ -5,20 +5,25 @@
 package org.triple_brain.module.search;
 
 import org.triple_brain.module.model.graph.GraphElementPojo;
+import org.triple_brain.module.model.graph.Identification;
+import org.triple_brain.module.model.graph.IdentificationPojo;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.net.URI;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class VertexSearchResult implements GraphElementSearchResult{
     private GraphElementPojo graphElement;
-    private List<String> propertiesName;
+    private Map<URI, GraphElementPojo> properties;
 
     public VertexSearchResult(
             GraphElementPojo graphElement,
-            List<String> propertiesName
+            Map<URI, GraphElementPojo> properties
     ){
         this.graphElement = graphElement;
-        this.propertiesName = propertiesName;
+        this.properties = properties;
     }
 
     @Override
@@ -33,14 +38,14 @@ public class VertexSearchResult implements GraphElementSearchResult{
         return graphElement;
     }
 
-    public List<String> getPropertiesName(){
-        if(null == propertiesName){
-            return new ArrayList<>();
+    public Map<URI, GraphElementPojo> getProperties(){
+        if(!hasProperties()){
+            return new HashMap<>();
         }
-        return propertiesName;
+        return properties;
     }
 
     public Boolean hasProperties(){
-        return null != propertiesName;
+        return null != properties;
     }
 }
