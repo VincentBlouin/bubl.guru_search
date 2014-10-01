@@ -15,6 +15,10 @@ public interface GraphSearch {
             User user
     );
 
+    public List<VertexSearchResult> searchOnlyForOwnVerticesOrSchemasForAutoCompletionByLabel(
+            String label, User user
+    );
+
     public List<VertexSearchResult> searchOnlyForOwnVerticesForAutoCompletionByLabel(
             String label, User user
     );
