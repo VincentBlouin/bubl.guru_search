@@ -22,7 +22,7 @@ public interface GraphSearch {
     public List<VertexSearchResult> searchOnlyForOwnVerticesForAutoCompletionByLabel(
             String label, User user
     );
-    public List<EdgeSearchResult> searchRelationsForAutoCompletionByLabel(
+    public List<GraphElementSearchResult> searchRelationsOrSchemasForAutoCompletionByLabel(
             String label,
             User user
     );
