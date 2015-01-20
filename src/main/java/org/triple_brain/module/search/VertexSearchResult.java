@@ -5,14 +5,10 @@
 package org.triple_brain.module.search;
 
 import org.triple_brain.module.model.graph.GraphElementPojo;
-import org.triple_brain.module.model.graph.Identification;
-import org.triple_brain.module.model.graph.IdentificationPojo;
 
 import java.net.URI;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 public class VertexSearchResult implements GraphElementSearchResult{
     private GraphElementPojo graphElement;
