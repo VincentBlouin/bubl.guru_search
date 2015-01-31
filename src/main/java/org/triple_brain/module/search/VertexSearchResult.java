@@ -15,6 +15,15 @@ public class VertexSearchResult implements GraphElementSearchResult{
     private Map<URI, GraphElementPojo> properties;
 
     public VertexSearchResult(
+            GraphElementPojo graphElement
+    ){
+        this(
+                graphElement,
+                new HashMap<URI, GraphElementPojo>()
+        );
+    }
+
+    public VertexSearchResult(
             GraphElementPojo graphElement,
             Map<URI, GraphElementPojo> properties
     ){
