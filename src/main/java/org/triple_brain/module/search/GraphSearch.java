@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface GraphSearch {
     public List<VertexSearchResult> searchSchemasOwnVerticesAndPublicOnesForAutoCompletionByLabel(
-            String label,
+            String searchTerm,
             User user
     );
 
@@ -20,10 +20,10 @@ public interface GraphSearch {
     );
 
     public List<VertexSearchResult> searchOnlyForOwnVerticesForAutoCompletionByLabel(
-            String label, User user
+            String searchTerm, User user
     );
     public List<GraphElementSearchResult> searchRelationsPropertiesOrSchemasForAutoCompletionByLabel(
-            String label,
+            String searchTerm,
             User user
     );
     public GraphElementSearchResult getByUri(URI uri, User user);
