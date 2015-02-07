@@ -19,7 +19,7 @@ public class VertexSearchResult implements GraphElementSearchResult{
     ){
         this(
                 graphElement,
-                new HashMap<URI, GraphElementPojo>()
+                null
         );
     }
 
