@@ -45,7 +45,7 @@ public class VertexSearchResult implements GraphElementSearchResult{
 
     public Map<URI, GraphElementPojo> getProperties(){
         if(!hasProperties()){
-            return new HashMap<>();
+            properties = new HashMap<>();
         }
         return properties;
     }
