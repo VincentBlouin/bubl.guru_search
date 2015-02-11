@@ -26,5 +26,5 @@ public interface GraphSearch {
             String searchTerm,
             User user
     );
-    public GraphElementSearchResult getByUri(URI uri, User user);
+    public GraphElementSearchResult getDetails(URI uri, User user);
 }
