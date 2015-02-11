@@ -9,7 +9,7 @@ import org.triple_brain.module.model.graph.schema.SchemaPojo;
 
 public class PropertySearchResult implements GraphElementSearchResult {
 
-    private GraphElementPojo property;
+    private GraphElementPojo graphElement;
     private SchemaPojo schema;
 
     public static PropertySearchResult forPropertyAndSchemaName(
@@ -26,20 +26,20 @@ public class PropertySearchResult implements GraphElementSearchResult {
             GraphElementPojo property,
             SchemaPojo schema
     ){
-        this.property = property;
+        this.graphElement = property;
         this.schema = schema;
     }
 
     @Override
     public GraphElementSearchResultPojo getGraphElementSearchResult() {
         return new GraphElementSearchResultPojo(
-                property
+                graphElement
         );
     }
 
     @Override
     public GraphElementPojo getGraphElement() {
-        return property;
+        return graphElement;
     }
 
     public SchemaPojo getSchema(){
