@@ -9,4 +9,5 @@ import org.triple_brain.module.model.graph.GraphElementPojo;
 public interface GraphElementSearchResult {
     GraphElementSearchResultPojo getGraphElementSearchResult();
     GraphElementPojo getGraphElement();
+
 }
