@@ -5,12 +5,14 @@
 package org.triple_brain.module.search;
 
 import org.triple_brain.module.model.graph.GraphElementPojo;
+import org.triple_brain.module.model.graph.GraphElementType;
 import org.triple_brain.module.model.graph.schema.SchemaPojo;
 
 public class PropertySearchResult implements GraphElementSearchResult {
 
     private GraphElementPojo graphElement;
     private SchemaPojo schema;
+    private static final GraphElementType type = GraphElementType.property;
 
     public static PropertySearchResult forPropertyAndSchema(
             GraphElementPojo property,
@@ -33,13 +35,19 @@ public class PropertySearchResult implements GraphElementSearchResult {
     @Override
     public GraphElementSearchResultPojo getGraphElementSearchResult() {
         return new GraphElementSearchResultPojo(
-                graphElement
+                graphElement,
+                type
         );
     }
 
     @Override
     public GraphElementPojo getGraphElement() {
         return graphElement;
+    }
+
+    @Override
+    public GraphElementType getType() {
+        return type;
     }
 
     public SchemaPojo getSchema(){
