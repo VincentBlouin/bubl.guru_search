@@ -12,7 +12,7 @@ import org.triple_brain.module.model.graph.edge.EdgePojo;
 public class EdgeSearchResult implements GraphElementSearchResult {
 
     private EdgePojo edge;
-    private static final GraphElementType type = GraphElementType.edge;
+    private GraphElementType type = GraphElementType.edge;
     public EdgeSearchResult(
             EdgePojo edgePojo
     ){
