@@ -37,7 +37,7 @@ public class EdgeSearchResult implements GraphElementSearchResult {
         return type;
     }
 
-    public Edge getEdge(){
+    public EdgePojo getEdge(){
         return edge;
     }
 }
