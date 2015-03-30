@@ -31,4 +31,7 @@ public interface GraphSearch {
     List<VertexSearchResult> searchPublicVerticesOnly(
             String searchTerm
     );
+
+    GraphElementSearchResult getDetailsAnonymously(URI uri);
+
 }
