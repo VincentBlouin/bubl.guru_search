@@ -10,21 +10,25 @@ import java.net.URI;
 import java.util.List;
 
 public interface GraphSearch {
-    public List<VertexSearchResult> searchSchemasOwnVerticesAndPublicOnesForAutoCompletionByLabel(
+    List<VertexSearchResult> searchSchemasOwnVerticesAndPublicOnesForAutoCompletionByLabel(
             String searchTerm,
             User user
     );
 
-    public List<VertexSearchResult> searchOnlyForOwnVerticesOrSchemasForAutoCompletionByLabel(
+    List<VertexSearchResult> searchOnlyForOwnVerticesOrSchemasForAutoCompletionByLabel(
             String label, User user
     );
 
-    public List<VertexSearchResult> searchOnlyForOwnVerticesForAutoCompletionByLabel(
+    List<VertexSearchResult> searchOnlyForOwnVerticesForAutoCompletionByLabel(
             String searchTerm, User user
     );
-    public List<GraphElementSearchResult> searchRelationsPropertiesOrSchemasForAutoCompletionByLabel(
+    List<GraphElementSearchResult> searchRelationsPropertiesOrSchemasForAutoCompletionByLabel(
             String searchTerm,
             User user
     );
-    public GraphElementSearchResult getDetails(URI uri, User user);
+    GraphElementSearchResult getDetails(URI uri, User user);
+
+    List<VertexSearchResult> searchPublicVerticesOnly(
+            String searchTerm
+    );
 }
