@@ -2,9 +2,9 @@
  * Copyright Vincent Blouin under the GPL License version 3
  */
 
-package org.triple_brain.module.search;
+package guru.bubl.module.search;
 
-import org.triple_brain.module.model.User;
+import guru.bubl.module.model.User;
 
 import java.net.URI;
 import java.util.List;
